@@ -1,0 +1,48 @@
+.chatappcontainer{
+    width:auto ;
+    height: 100dvh;
+   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+gap: 40px;
+    flex-direction: column;
+    color: white;
+    background-color: rgb(4, 4, 19);
+}
+.formdetails{
+    display: flex;
+    flex-direction: column;
+    /* border: 1px solid red; */
+    gap: 10px;
+    width: 70%;
+    color: white;
+}
+.lockcontainer{
+    width: 50%;
+    display: flex;
+    border: 0.5px solid white;
+    flex-direction: column;
+    padding: 20px 20px;
+    gap: 20px;
+    align-items: center;
+    border-radius: 10px;
+}
+.registerbutton{
+    background-color: rgb(166, 166, 251);
+    border-radius: 7px;
+    padding: 7px 7px;
+    color: white;
+   
+}
+.headapp{
+    font-size: 40px;
+}
+.inputfield{
+    /* color: white; */
+    padding: 7px 7px;
+    border: 0.5px solid white;
+    background-color:rgb(9, 9, 37) ;
+    border-radius: 7px;
+    color: white;
+}

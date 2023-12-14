@@ -1,0 +1,45 @@
+.overall{
+    width: auto;
+    height: 100vh;
+    background-color: rgb(4, 4, 19);
+    display: flex;
+
+}
+.leftsection{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    height: 100vh;
+    border-right: 0.01px solid white;
+    /* border-width: ; */
+}
+.topleft{
+    display: flex;
+    gap: 10px;
+    /* width: 100%; */
+   padding: 5px 5px;
+   border: 1px solid white;
+}
+.rightsection{
+    display: flex;
+    width: 70%;
+    height: 100vh;
+
+}
+.butaddchat{
+    padding: 10px 10px;
+    background-color: rgb(29, 169, 200);
+    color: white;
+    border-radius: 8px;
+    border-style: none;
+width: 30%;
+}
+.inputchat{
+    padding: 5px 5px;
+    width: 70%;
+    border-style: none;
+    border-radius:8px ;
+    color: white;
+    
+    background-color: rgba(89, 90, 100, 0.458);
+}
