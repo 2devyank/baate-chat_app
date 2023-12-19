@@ -33,9 +33,13 @@ const registerUser=(data:{
 const logoutUser=()=>{
     return apiClient.post("/logout");
 }
+const searchAllUsers=()=>{
+    return apiClient.get("/allusers")
+}
 
 export{
     loginUser,
     logoutUser,
-    registerUser
+    registerUser,
+    searchAllUsers
 }
