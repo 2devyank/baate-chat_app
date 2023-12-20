@@ -1,11 +1,15 @@
 import { useState } from "react";
 import AddChatmodal from "../components/AddChatmodal";
 import "../styles/chat.css";
-function Chat() {
-
+import { ChatListIteminterface } from "../interfaces/chat";
+import { getChatobjectMetadata } from "../utils";
+import { useAuth } from "../context/AuthContext";
+const Chat=()=> {
+const {user}=useAuth();
   const [openchatmodal,setopenchatmodal]=useState<boolean>(false);
- 
-  
+  const [loadingChats,setLoadingChats]=useState<boolean>(false);
+  const [chats,setChat]=useState<ChatListIteminterface[]>([]);
+  const [searchQuery,setSearchQuery]=useState();
   return (
     <>
     <AddChatmodal
@@ -25,11 +29,30 @@ function Chat() {
               setopenchatmodal(true)
             }}>+ Add chat</button>
           </div>
+          <div>
 
-
-
-          <div className="usertab"></div>
+            {/* {loadingChats?(
+              <div>
+                hello
+              </div>
+            ):(
+              [...chats]
+              .filter((chat)=>{
+                searchQuery?
+                getChatobjectMetadata(chat,user!)
+                .title?.toLocaleLowerCase()
+                ?.includes(searchQuery)
+                :true
+              })
+              // .map((chat)=>{
+                //   return(
+                  
+                  //   )
+                  // })
+                  )} */}
+          {/* </div> */}
         </div>
+                  </div>
 
         <div className="rightsection"></div>
       </div>

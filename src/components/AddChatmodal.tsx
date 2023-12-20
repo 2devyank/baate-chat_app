@@ -71,7 +71,9 @@ const AddChatmodal: React.FC<{
           <p>Create chat</p>
           <CancelIcon onClick={() => onClose()} />
         </div>
-        <Switch {...label} />
+        <div>
+        <Switch {...label} /> Is it a Group chat ?
+        </div>
         <div>
         <Select 
         placeholder={isGroupChat}

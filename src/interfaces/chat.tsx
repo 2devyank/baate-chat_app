@@ -6,7 +6,7 @@ export interface ChatListIteminterface{
     isGroupChat:true;
     lastMessage?:ChatMessageInterface;
     name:string;
-    participants:UserInterface;
+    participants:UserInterface[];
     updatedAt:string;
     _id:string;
 }

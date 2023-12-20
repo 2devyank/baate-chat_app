@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { UserInterface } from "../interfaces/user";
-
+import "../styles/select.css"
 
 interface CustomSelectProps{
     options:UserInterface[],
@@ -18,7 +18,7 @@ const [selectedOption,setSelectedOption]=useState<UserInterface|null>();
     }
 
     return(
-        <select value={selectedOption?selectedOption.username:""} onChange={handlechange}>
+        <select className="select" value={selectedOption?selectedOption.username:""} onChange={handlechange}>
 <option value="" disabled>
 {placeholder?"add participants to group":"Add user to chat"}
 </option>
