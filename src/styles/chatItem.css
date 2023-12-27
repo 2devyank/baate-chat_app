@@ -1,0 +1,13 @@
+.role{
+   color: white;
+   border: 1px solid white;
+   display: flex;
+}
+.tilecard{
+display: flex;flex-direction: column;
+}
+.headone{
+    display: flex;
+ width: 100%;
+ justify-content: space-between;
+}

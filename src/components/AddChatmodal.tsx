@@ -14,7 +14,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { UserInterface } from "../interfaces/user.tsx";
 import "../styles/addchatmodal.css";
 import { requestHandler } from "../utils/index.tsx";
-import { searchAllUsers } from "../api/index.tsx";
+import { createOneOnOnecount, searchAllUsers } from "../api/index.tsx";
 import Select from "./Select.tsx";
 const label = { inputProps: { "aria-label": "Switch demo" } };
 const AddChatmodal: React.FC<{
@@ -26,18 +26,37 @@ const AddChatmodal: React.FC<{
 
 
   const [userdata,setuserdata]=useState<UserInterface[]>([]);
-  const [selectedUserId,SetselectedUserId]=useState<null|String>(null);
+  const [selectedUserId,SetselectedUserId]=useState<null|string>(null);
   const [isGroupChat,SetisGroupChat]=useState(false);
   const [GroupParticipants,setGroupParticipants]=useState<string[]>([]);
-
+  const [creatingchat,setcreatingchat]=useState(false);
   const handleClose = () => {
+    setuserdata([])
+    SetselectedUserId("")
     onClose();
   };
 
 
   
   
-  
+  const createNewChat=async()=>{
+
+    if(!selectedUserId) return alert('please select a user');
+    await requestHandler(
+    async()=>await createOneOnOnecount(selectedUserId),
+    setcreatingchat,
+    (res)=>{
+      const {data}=res;
+      if(res.statusCode===200){
+        alert("chat already exist")
+        return;
+      }
+      onSuccess(data);
+      handleClose();
+    },
+    alert
+    )
+  }
   const getAllUsers = async () => {
     requestHandler(
       async () => await searchAllUsers(),
@@ -78,12 +97,12 @@ const AddChatmodal: React.FC<{
         <Select 
         placeholder={isGroupChat}
         options={userdata} 
-        onChange={({username})=>{isGroupChat?setGroupParticipants([...GroupParticipants,username]):SetselectedUserId(username)}}
+        onChange={({_id})=>{isGroupChat?setGroupParticipants([...GroupParticipants,_id]):SetselectedUserId(_id)}}
         />
         </div>
         <div className="butgrp">
-          <button className="modbut">Close</button>
-          <button className="modbut">Create</button>
+          <button onClick={handleClose} className="modbut">Close</button>
+          <button onClick={createNewChat} className="modbut">Create</button>
         </div>
       </div>
     </Modal>

@@ -10,17 +10,19 @@ interface CustomSelectProps{
 
 const Select:React.FC<CustomSelectProps>=({options,onChange,placeholder})=>{
 const [selectedOption,setSelectedOption]=useState<UserInterface|null>();
+
     const handlechange=(e:ChangeEvent<HTMLSelectElement>)=>{
         const value=e.target.value;
-        const selected=options.find((option)=>option.username===value)||null;
+        console.log("value",value)
+        const selected=options.find((option)=>option._id===value)||null;
         setSelectedOption(selected);
         selected && onChange(selected);
     }
-
+console.log(selectedOption,"selected")
     return(
         <select className="select" value={selectedOption?selectedOption.username:""} onChange={handlechange}>
-<option value="" disabled>
-{placeholder?"add participants to group":"Add user to chat"}
+<option value="">
+{/* {placeholder?"add participants to group":"Add user to chat"} */}
 </option>
 {
     options.map((option)=>(
