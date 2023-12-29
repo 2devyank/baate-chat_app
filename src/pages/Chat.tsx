@@ -9,7 +9,8 @@ import { LocalStorage, getChatobjectMetadata, requestHandler } from "../utils";
 import { useAuth } from "../context/AuthContext";
 import ChatItem from "../components/ChatItem";
 import { useSocket } from "../context/Socket.context";
-import { getAllchatMessages, getAllchats } from "../api";
+import { getAllchatMessages, getAllchats, sendMessage } from "../api";
+import MessageItem from "../components/MessageItem";
 
 const CONNECTED_EVENT = "connected";
 const DISCONNECTED_EVENT = "disconnect";
@@ -32,8 +33,10 @@ const Chat = () => {
   const [unreadMessages, setUnreadMessages] = useState<ChatMessageInterface[]>(
     []
   );
-  const [message, setmessage] = useState("");
+
   const [loadingMessages, setLoadingMessages] = useState(false);
+  const [attachedFiles, setAttachedFiles] = useState([]);
+  const [message, setmessage] = useState("");
   const [messages, setmessages] = useState<ChatMessageInterface[]>([]);
   const [Isconnected, setIsConnected] = useState(false);
   const getMessages = async () => {
@@ -89,7 +92,11 @@ const Chat = () => {
     }
     updateLastChatMessage(message.chat,message)
   };
+  console.log("phela",messages);
+  console.log("dusra",message);
+  const handleOnMessageChange=()=>{
 
+  }
   const onConnect = () => {
     setIsConnected(true);
   };
@@ -99,7 +106,32 @@ const Chat = () => {
   const onNewChats=(chat:ChatListIteminterface)=>{
     setChat((prev)=>[chat,...prev]);
   }
+const sendChatMessage=async()=>{
+  if(!currentChat.current?._id||!socket) return;
+  await requestHandler(
+    async()=>await sendMessage(currentChat.current?._id||"",
+    message,
+    attachedFiles
+    ),
+    null,
+    (res)=>{
+      setmessage("")
+      setAttachedFiles([])
+      setmessages((prev)=>[res.data,...prev])
+      updateLastChatMessage(currentChat.current?._id||"",res.data)
 
+    }
+    ,
+    alert
+  )
+}
+const onChatLeave=(chat:ChatListIteminterface)=>{
+if(chat._id===currentChat.current?._id){
+  currentChat.current=null;
+  LocalStorage.remove("currentchat");
+}
+setChat((prev)=>prev.filter((c)=>c._id!==chat._id))
+}
   useEffect(() => {
     getChats();
 
@@ -118,13 +150,14 @@ const Chat = () => {
     socket.on(DISCONNECTED_EVENT, onDisconnect);
     socket.on(MESSAGE_RECEIVED_EVENT,onMessageReceived);
     socket.on(NEW_CHAT_EVENT,onNewChats)
+    socket.on(LEAVE_CHAT_EVENT,onChatLeave);
 
     return()=>{
       socket.off(CONNECTED_EVENT,onConnect);
       socket.off(DISCONNECTED_EVENT,onDisconnect);
       socket.off(MESSAGE_RECEIVED_EVENT,onMessageReceived);
       socket.off(NEW_CHAT_EVENT,onNewChats);
-
+      socket.off(LEAVE_CHAT_EVENT,onChatLeave);
     }
   }, [socket,chats]);
 
@@ -184,6 +217,7 @@ const Chat = () => {
                         )
                           return;
                         LocalStorage.set("currentChat", chat);
+                        currentChat.current=chat;
                         setmessage("");
                         getMessages();
                       }}
@@ -205,7 +239,63 @@ const Chat = () => {
           </div>
         </div>
 
-        <div className="rightsection"></div>
+          {
+            currentChat.current && currentChat.current?._id?(
+              <div className="rightsection">
+
+
+              <div className="sticktop">
+            <img src={getChatobjectMetadata(currentChat.current!,user).avatar} alt="" />
+                <div className="topuserinfo">
+            <span>{getChatobjectMetadata(currentChat.current!,user).title}</span>
+            <small className="small">{getChatobjectMetadata(currentChat.current!,user).description}</small>
+                </div>
+          </div>
+          <div className="messagesection">
+              {
+                loadingMessages?(
+                  <span>
+                    typing...
+                  </span>
+                ):(
+                  <>
+                  {messages?.map((msg)=>{
+                    return(
+                      <MessageItem
+                      key={msg._id}
+                      isOwnMessage={msg.sender?._id===user?._id}
+                      isGroupChatMessage={currentChat.current?.isGroupChat}
+                      message={msg}
+                      />
+                    )
+                    
+                  })}
+                  </>
+                )
+              }
+          </div>
+          <div className="messageinput">
+          <input placeholder="message"
+          value={message}
+          onKeyDown={(e)=>{
+            if(e.key==="Enter"){
+              sendChatMessage();
+            }
+          }}
+          onChange={(e)=>setmessage(e.target.value)}
+          type="text" />
+          <button
+          onClick={sendChatMessage}>
+            SEND
+          </button>
+          </div>
+        </div>
+            ):(
+              <div>
+                No Chat Selected
+              </div>
+            )
+          }
       </div>
     </>
   );

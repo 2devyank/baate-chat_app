@@ -16,7 +16,8 @@ const ChatItem: React.FC<{
 }>=({chat,onCLick,isActive,unreadCount=0,onChatDelete})=> {
   const {user}=useAuth();
   const [openoptions,setopenoptions]=useState(false);
-  
+  const [opendots,setopendots]=useState(false);
+  console.log("section",chat);
   const DeleteChat=async()=>{
     await requestHandler(
       async()=>await deleteOneOnOneChat(chat._id),
@@ -33,15 +34,26 @@ const ChatItem: React.FC<{
     className='role'
     role='button'
     onClick={()=>onCLick(chat)}
-    onMouseLeave={()=>setopenoptions(false)}
+    onMouseLeave={()=>{
+      setopenoptions(false)
+      setopendots(false)
+    }}
+    onMouseEnter={()=>setopendots(true)}
     >
-       <button onClick={(e)=>{
+    {
+
+     opendots && <button 
+     className='dotbutton'
+     onClick={(e)=>{
         e.stopPropagation();
         setopenoptions(!openoptions)
-       }}>
+      }}>
       <MoreVertIcon/>
+       </button>
+    }
      {openoptions &&  <div >
         <p
+        className='pbut'
           onClick={(e)=>{
             e.stopPropagation();
             const ok=confirm(
@@ -59,16 +71,15 @@ const ChatItem: React.FC<{
 
       </div>
      }
-       </button>
         <div><img src={getChatobjectMetadata(chat,user!).avatar} alt="" /></div>
         <div className='headone'>
 
         <div className='tilecard'>
         <span>{getChatobjectMetadata(chat,user).title}</span>
-        <span>{getChatobjectMetadata(chat,user).lastMessage}</span>
+        <small className='smalllasttext'>{getChatobjectMetadata(chat,user).lastMessage}</small>
         </div>
         <div>
-          <small>{moment(chat.updatedAt).add("TIME_ZONE","hours").fromNow(true)}</small>
+          <small className='smalltime'>{moment(chat.updatedAt).add("TIME_ZONE","hours").fromNow(true)}</small>
           {
             unreadCount<=0?null:(
               <span>

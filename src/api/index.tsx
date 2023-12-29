@@ -1,6 +1,7 @@
 import axios from "axios";
 import { LocalStorage } from "../utils";
 
+
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_SERVER_URI,
   withCredentials: true,
@@ -41,9 +42,11 @@ const getAllchatMessages = (chatId: string) => {
 const sendMessage = (chatId: string, content: string, attachments: File[]) => {
   const formData=new FormData();
   if(content){
+    console.log("content ayta vha",content)
     formData.append("content",content);
   }
-    return apiClient.post(`/messages/${chatId}`,formData);
+  console.log("formdata",formData);
+    return apiClient.post(`/messages/${chatId}`,{content});
 };
 
 const getAllchats=()=>{

@@ -58,7 +58,7 @@ export class LocalStorage {
   }
 }
 export const getChatobjectMetadata = (
-  chat: ChatListIteminterface,
+  chat: ChatListIteminterface ,
   LoggedInUser: UserInterface|null
 ) => {
   const lastMessage = chat.lastMessage?.content

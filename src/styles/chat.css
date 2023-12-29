@@ -12,6 +12,7 @@
     height: 100vh;
     border-right: 0.01px solid white;
     /* border-width: ; */
+    
 }
 .topleft{
     display: flex;
@@ -22,9 +23,11 @@
 }
 .rightsection{
     display: flex;
+    gap: 20px;
     width: 70%;
     height: 100vh;
-
+    color:white;
+    flex-direction: column;
 }
 .butaddchat{
     padding: 10px 10px;
@@ -42,4 +45,40 @@ width: 30%;
     color: white;
     
     background-color: rgba(89, 90, 100, 0.458);
+}
+.messageinput{
+    height: 10%;
+    width: 70%;
+    position: absolute;
+    border: 1px solid white;
+    bottom: 0px;
+}
+.sticktop{
+    height: 10%;
+    width: 70%;
+    position: absolute;
+    border: 1px solid white;
+    top: 0px;
+}
+.messagesection{
+    width: 70%;
+    height: 80%;
+    position: absolute;
+    top: 10%;
+    border: 2px solid red;
+}
+.downleft{
+    display: flex;
+    margin:10px;
+    gap: 10px;
+    flex-direction: column;
+}
+.topuserinfo{
+    border: 1px solid red;
+    display: flex;
+    flex-direction: column;
+}
+.small{
+    color: rgb(184, 175, 175);
+    font-size: 13px;
 }

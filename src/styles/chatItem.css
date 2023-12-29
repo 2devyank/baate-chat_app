@@ -1,7 +1,15 @@
 .role{
    color: white;
-   border: 1px solid white;
+   /* border: 1px solid white; */
    display: flex;
+   position: relative;
+   padding: 15px 15px;
+   border-radius: 1.4rem;
+
+}
+.role:hover{
+   border: 1px solid white;
+   background-color: rgba(89, 90, 100, 0.458);
 }
 .tilecard{
 display: flex;flex-direction: column;
@@ -10,4 +18,30 @@ display: flex;flex-direction: column;
     display: flex;
  width: 100%;
  justify-content: space-between;
+}
+.pbut{
+   display: flex;
+   position: absolute;
+   left: 0px;
+   bottom: -65px;
+   background-color: rgba(89, 90, 100, 458);
+   z-index: 1;
+   color:white ;
+   padding: 15px 15px;
+   border-radius:6px ;
+   align-items: center;
+}
+.dotbutton{
+   background-color: none;
+   background: none;
+   color: white;
+   border-style: none;
+}
+.smalllasttext{
+   color: grey;
+   font-size: 13px;
+}
+.smalltime{
+   color: rgb(184, 175, 175);
+   font-size: 13px;
 }
