@@ -45,8 +45,11 @@ const sendMessage = (chatId: string, content: string, attachments: File[]) => {
     console.log("content ayta vha",content)
     formData.append("content",content);
   }
+  attachments?.map((file)=>{
+formData.append("attachments",file);
+  })
   console.log("formdata",formData);
-    return apiClient.post(`/messages/${chatId}`,{content});
+    return apiClient.post(`/messages/${chatId}`,formData);
 };
 
 const getAllchats=()=>{

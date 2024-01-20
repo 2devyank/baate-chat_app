@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import AddChatmodal from "../components/AddChatmodal";
+import SendIcon from '@mui/icons-material/Send';
+import AttachmentIcon from '@mui/icons-material/Attachment';
 import "../styles/chat.css";
 import {
   ChatListIteminterface,
@@ -35,7 +37,7 @@ const Chat = () => {
   );
 
   const [loadingMessages, setLoadingMessages] = useState(false);
-  const [attachedFiles, setAttachedFiles] = useState([]);
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [message, setmessage] = useState("");
   const [messages, setmessages] = useState<ChatMessageInterface[]>([]);
   const [Isconnected, setIsConnected] = useState(false);
@@ -106,6 +108,7 @@ const Chat = () => {
   const onNewChats=(chat:ChatListIteminterface)=>{
     setChat((prev)=>[chat,...prev]);
   }
+  console.log("files",attachedFiles)
 const sendChatMessage=async()=>{
   if(!currentChat.current?._id||!socket) return;
   await requestHandler(
@@ -119,9 +122,7 @@ const sendChatMessage=async()=>{
       setAttachedFiles([])
       setmessages((prev)=>[res.data,...prev])
       updateLastChatMessage(currentChat.current?._id||"",res.data)
-
-    }
-    ,
+    },
     alert
   )
 }
@@ -242,8 +243,6 @@ setChat((prev)=>prev.filter((c)=>c._id!==chat._id))
           {
             currentChat.current && currentChat.current?._id?(
               <div className="rightsection">
-
-
               <div className="sticktop">
             <img src={getChatobjectMetadata(currentChat.current!,user).avatar} alt="" />
                 <div className="topuserinfo">
@@ -275,6 +274,22 @@ setChat((prev)=>prev.filter((c)=>c._id!==chat._id))
               }
           </div>
           <div className="messageinput">
+            <input
+            hidden
+            id="attachments"
+            type="file"
+            value=""
+            multiple
+            max={5}
+            onChange={(e)=>{
+              if(e.target.files){
+                setAttachedFiles([...e.target.files]);
+              }
+            }}
+/>
+<label htmlFor="attachments" className="attachment">
+            <AttachmentIcon/>
+</label>
           <input placeholder="message"
           value={message}
           onKeyDown={(e)=>{
@@ -282,11 +297,15 @@ setChat((prev)=>prev.filter((c)=>c._id!==chat._id))
               sendChatMessage();
             }
           }}
+          className="messageenter"
           onChange={(e)=>setmessage(e.target.value)}
           type="text" />
           <button
-          onClick={sendChatMessage}>
-            SEND
+          disabled={!message && attachedFiles.length<=0}
+          onClick={sendChatMessage}
+          className="sendmessage"
+          >
+           <SendIcon/>
           </button>
           </div>
         </div>

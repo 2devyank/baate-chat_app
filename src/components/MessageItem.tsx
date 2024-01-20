@@ -1,5 +1,6 @@
 import React from 'react'
 import { ChatMessageInterface } from '../interfaces/chat'
+import "../styles/messagetext.css"
 
 const MessageItem:React.FC<{
     isOwnMessage?:boolean;
@@ -7,7 +8,7 @@ const MessageItem:React.FC<{
     message:ChatMessageInterface;
 }>=({isOwnMessage,isGroupChatMessage,message})=> {
   return (
-    <div>{message.content}</div>
+    <div className={isOwnMessage?"Own":"NotOwn"}>{message.content}</div>
   )
 }
 

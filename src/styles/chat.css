@@ -48,24 +48,31 @@ width: 30%;
 }
 .messageinput{
     height: 10%;
-    width: 70%;
-    position: absolute;
+    width: 97%;
+    /* position: absolute; */
     border: 1px solid white;
-    bottom: 0px;
+    /* bottom: 0px; */
+    display: flex;
+    padding: 10px 10px ;
+    align-items: center;
 }
 .sticktop{
     height: 10%;
-    width: 70%;
-    position: absolute;
-    border: 1px solid white;
-    top: 0px;
+    width: 99%;
+    /* position: absolute; */
+    border-bottom: 1px solid white;
+    /* top: 0px; */
 }
 .messagesection{
-    width: 70%;
+    width: 100%;
     height: 80%;
-    position: absolute;
-    top: 10%;
-    border: 2px solid red;
+    /* position: absolute; */
+    /* top: 10%; */
+    /* border: 2px solid red; */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* border-left:1px solid white; */
 }
 .downleft{
     display: flex;
@@ -74,11 +81,34 @@ width: 30%;
     flex-direction: column;
 }
 .topuserinfo{
-    border: 1px solid red;
+    /* border: 1px solid red; */
     display: flex;
     flex-direction: column;
 }
 .small{
     color: rgb(184, 175, 175);
     font-size: 13px;
+}
+.attachment{
+    height: 30px;
+border: none;
+background: none;
+color: white;
+width: 5%;
+}
+.messageenter{
+width: 90%;
+height: 30px;
+background-color: rgba(89, 90, 100, 0.458);
+border-style: none;
+border-radius: 2rem;
+padding: 5px 5px;
+color: white;
+}
+.sendmessage{
+height: 30px;
+width: 5%;
+border: none;
+background: none;
+color: white;
 }
