@@ -1,21 +1,48 @@
-.Own{
-    align-self: end;
-   
-    width: 30%;
-       
-      border-radius: 1.125rem 1.125rem 0rem  1.125rem;
-      background-color: rgb(29, 169, 200);
-      color: white;
-      padding: 10px 10px;
-    margin-right: 5px;
+.Own {
+  align-self: end;
+
+  width:fit-content;
+  border-radius: 1.125rem 1.125rem 0rem 1.125rem;
+  background-color: rgb(29, 169, 200);
+  color: white;
+  padding: 10px 10px;
+  margin-right: 5px;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
 }
-.NotOwn{
-    align-self: start;
+
+.NotOwn {
+  align-self: start;
   margin-left: 5px;
-    width: 30%;
-    border-radius: 1.125rem 1.125rem 1.125rem  0rem;
-    background-color: rgb(29, 169, 200);
-    color: white;
-    padding: 10px 10px;
-  
-  }
+  width:fit-content;
+  border-radius: 1.125rem 1.125rem 1.125rem 0rem;
+  background-color: rgb(29, 169, 200);
+  color: white;
+  padding: 10px 10px;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+
+.textimage {
+  width: 10px;
+  height: 10px;
+}
+
+
+
+
+.centersearch {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: none;
+
+  border-style: none;
+}
+
+.images {
+  position: relative;
+}

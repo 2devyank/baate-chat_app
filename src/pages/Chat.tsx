@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import AddChatmodal from "../components/AddChatmodal";
-import SendIcon from '@mui/icons-material/Send';
-import AttachmentIcon from '@mui/icons-material/Attachment';
+import SendIcon from "@mui/icons-material/Send";
+import AttachmentIcon from "@mui/icons-material/Attachment";
 import "../styles/chat.css";
 import {
   ChatListIteminterface,
@@ -26,7 +26,7 @@ const UPDATE_GROUP_NAME_EVENT = "updateGroupName";
 const Chat = () => {
   const { user } = useAuth();
   const { socket } = useSocket();
-
+  const viewref = useRef<HTMLDivElement>(null);
   const currentChat = useRef<ChatListIteminterface | null>(null);
   const [openchatmodal, setopenchatmodal] = useState<boolean>(false);
   const [loadingChats, setLoadingChats] = useState<boolean>(false);
@@ -72,7 +72,7 @@ const Chat = () => {
       alert
     );
   };
-  console.log("yh chats",chats);
+  console.log("yh chats", chats);
   const updateLastChatMessage = (
     chatToUpdateId: string,
     message: ChatMessageInterface
@@ -88,51 +88,51 @@ const Chat = () => {
   };
   const onMessageReceived = (message: ChatMessageInterface) => {
     if (message.chat !== currentChat.current?._id) {
-      setUnreadMessages((prev) => [message, ...prev]);
+      setUnreadMessages((prev) => [...prev, message]);
     } else {
-      setmessages((msg) => [message, ...msg]);
+      setmessages((msg) => [...msg, message]);
     }
-    updateLastChatMessage(message.chat,message)
+    updateLastChatMessage(message.chat, message);
   };
-  console.log("phela",messages);
-  console.log("dusra",message);
-  const handleOnMessageChange=()=>{
-
-  }
+  console.log("phela", messages);
+  console.log("dusra", message);
+  const handleOnMessageChange = () => {};
   const onConnect = () => {
     setIsConnected(true);
   };
   const onDisconnect = () => {
     setIsConnected(false);
   };
-  const onNewChats=(chat:ChatListIteminterface)=>{
-    setChat((prev)=>[chat,...prev]);
-  }
-  console.log("files",attachedFiles)
-const sendChatMessage=async()=>{
-  if(!currentChat.current?._id||!socket) return;
-  await requestHandler(
-    async()=>await sendMessage(currentChat.current?._id||"",
-    message,
-    attachedFiles
-    ),
-    null,
-    (res)=>{
-      setmessage("")
-      setAttachedFiles([])
-      setmessages((prev)=>[res.data,...prev])
-      updateLastChatMessage(currentChat.current?._id||"",res.data)
-    },
-    alert
-  )
-}
-const onChatLeave=(chat:ChatListIteminterface)=>{
-if(chat._id===currentChat.current?._id){
-  currentChat.current=null;
-  LocalStorage.remove("currentchat");
-}
-setChat((prev)=>prev.filter((c)=>c._id!==chat._id))
-}
+  const onNewChats = (chat: ChatListIteminterface) => {
+    setChat((prev) => [chat, ...prev]);
+  };
+  console.log("files", attachedFiles);
+  const sendChatMessage = async () => {
+    if (!currentChat.current?._id || !socket) return;
+    await requestHandler(
+      async () =>
+        await sendMessage(
+          currentChat.current?._id || "",
+          message,
+          attachedFiles
+        ),
+      null,
+      (res) => {
+        setmessage("");
+        setAttachedFiles([]);
+        setmessages((prev) => [...prev, res.data]);
+        updateLastChatMessage(currentChat.current?._id || "", res.data);
+      },
+      alert
+    );
+  };
+  const onChatLeave = (chat: ChatListIteminterface) => {
+    if (chat._id === currentChat.current?._id) {
+      currentChat.current = null;
+      LocalStorage.remove("currentchat");
+    }
+    setChat((prev) => prev.filter((c) => c._id !== chat._id));
+  };
   useEffect(() => {
     getChats();
 
@@ -149,19 +149,21 @@ setChat((prev)=>prev.filter((c)=>c._id!==chat._id))
 
     socket.on(CONNECTED_EVENT, onConnect);
     socket.on(DISCONNECTED_EVENT, onDisconnect);
-    socket.on(MESSAGE_RECEIVED_EVENT,onMessageReceived);
-    socket.on(NEW_CHAT_EVENT,onNewChats)
-    socket.on(LEAVE_CHAT_EVENT,onChatLeave);
+    socket.on(MESSAGE_RECEIVED_EVENT, onMessageReceived);
+    socket.on(NEW_CHAT_EVENT, onNewChats);
+    socket.on(LEAVE_CHAT_EVENT, onChatLeave);
 
-    return()=>{
-      socket.off(CONNECTED_EVENT,onConnect);
-      socket.off(DISCONNECTED_EVENT,onDisconnect);
-      socket.off(MESSAGE_RECEIVED_EVENT,onMessageReceived);
-      socket.off(NEW_CHAT_EVENT,onNewChats);
-      socket.off(LEAVE_CHAT_EVENT,onChatLeave);
-    }
-  }, [socket,chats]);
-
+    return () => {
+      socket.off(CONNECTED_EVENT, onConnect);
+      socket.off(DISCONNECTED_EVENT, onDisconnect);
+      socket.off(MESSAGE_RECEIVED_EVENT, onMessageReceived);
+      socket.off(NEW_CHAT_EVENT, onNewChats);
+      socket.off(LEAVE_CHAT_EVENT, onChatLeave);
+    };
+  }, [socket, chats]);
+  useEffect(() => {
+    viewref.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages,currentChat]);
   return (
     <>
       <AddChatmodal
@@ -180,7 +182,7 @@ setChat((prev)=>prev.filter((c)=>c._id!==chat._id))
               className="inputchat"
               type="text"
               placeholder="Search user or group"
-              onChange={(e)=>setSearchQuery(e.target.value)}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <button
               className="butaddchat"
@@ -196,7 +198,7 @@ setChat((prev)=>prev.filter((c)=>c._id!==chat._id))
               <div>hello</div>
             ) : (
               [...chats]
-                .filter((chat) => 
+                .filter((chat) =>
                   searchQuery
                     ? getChatobjectMetadata(chat, user)
                         .title?.toLocaleLowerCase()
@@ -218,7 +220,7 @@ setChat((prev)=>prev.filter((c)=>c._id!==chat._id))
                         )
                           return;
                         LocalStorage.set("currentChat", chat);
-                        currentChat.current=chat;
+                        currentChat.current = chat;
                         setmessage("");
                         getMessages();
                       }}
@@ -240,81 +242,86 @@ setChat((prev)=>prev.filter((c)=>c._id!==chat._id))
           </div>
         </div>
 
-          {
-            currentChat.current && currentChat.current?._id?(
-              <div className="rightsection">
-              <div className="sticktop">
-            <img src={getChatobjectMetadata(currentChat.current!,user).avatar} alt="" />
-                <div className="topuserinfo">
-            <span>{getChatobjectMetadata(currentChat.current!,user).title}</span>
-            <small className="small">{getChatobjectMetadata(currentChat.current!,user).description}</small>
-                </div>
-          </div>
-          <div className="messagesection">
-              {
-                loadingMessages?(
-                  <span>
-                    typing...
-                  </span>
-                ):(
-                  <>
-                  {messages?.map((msg)=>{
-                    return(
-                      <MessageItem
-                      key={msg._id}
-                      isOwnMessage={msg.sender?._id===user?._id}
-                      isGroupChatMessage={currentChat.current?.isGroupChat}
-                      message={msg}
-                      />
-                    )
-                    
-                  })}
-                  </>
-                )
-              }
-          </div>
-          <div className="messageinput">
-            <input
-            hidden
-            id="attachments"
-            type="file"
-            value=""
-            multiple
-            max={5}
-            onChange={(e)=>{
-              if(e.target.files){
-                setAttachedFiles([...e.target.files]);
-              }
-            }}
-/>
-<label htmlFor="attachments" className="attachment">
-            <AttachmentIcon/>
-</label>
-          <input placeholder="message"
-          value={message}
-          onKeyDown={(e)=>{
-            if(e.key==="Enter"){
-              sendChatMessage();
-            }
-          }}
-          className="messageenter"
-          onChange={(e)=>setmessage(e.target.value)}
-          type="text" />
-          <button
-          disabled={!message && attachedFiles.length<=0}
-          onClick={sendChatMessage}
-          className="sendmessage"
-          >
-           <SendIcon/>
-          </button>
-          </div>
-        </div>
-            ):(
-              <div>
-                No Chat Selected
+        {currentChat.current && currentChat.current?._id ? (
+          <div className="rightsection">
+            <div className="sticktop">
+              <img
+                src={getChatobjectMetadata(currentChat.current!, user).avatar}
+                alt=""
+              />
+              <div className="topuserinfo">
+                <span>
+                  {getChatobjectMetadata(currentChat.current!, user).title}
+                </span>
+                <small className="small">
+                  {
+                    getChatobjectMetadata(currentChat.current!, user)
+                      .description
+                  }
+                </small>
               </div>
-            )
-          }
+            </div>
+            <div  className="messagesection">
+              {loadingMessages ? (
+                <span>typing...</span>
+              ) : (
+                <>
+                  {messages?.map((msg) => {
+                    return (
+                      <div ref={viewref} style={{display:"flex",flexDirection:"column"}}>
+                      <MessageItem
+                        key={msg._id}
+                        isOwnMessage={msg.sender?._id === user?._id}
+                        isGroupChatMessage={currentChat.current?.isGroupChat}
+                        message={msg}
+                        />
+                        </div>
+                    );
+                  })}
+                </>
+              )}
+            </div>
+            <div className="messageinput">
+              <input
+                hidden
+                id="attachments"
+                type="file"
+                value=""
+                multiple
+                max={5}
+                onChange={(e) => {
+                  if (e.target.files) {
+                    setAttachedFiles([...e.target.files]);
+                  }
+                }}
+              />
+              <label htmlFor="attachments" className="attachment">
+                <AttachmentIcon />
+              </label>
+              <input
+                placeholder="message"
+                value={message}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    sendChatMessage();
+                  }
+                }}
+                className="messageenter"
+                onChange={(e) => setmessage(e.target.value)}
+                type="text"
+              />
+              <button
+                disabled={!message && attachedFiles.length <= 0}
+                onClick={sendChatMessage}
+                className="sendmessage"
+              >
+                <SendIcon />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div>No Chat Selected</div>
+        )}
       </div>
     </>
   );
