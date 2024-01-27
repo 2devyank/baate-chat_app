@@ -72,6 +72,18 @@ const fetchgroupdetails=(chatId:string)=>{
 const deleteGroup=(chatId:string)=>{
   return apiClient.delete(`/group/${chatId}`)
 }
+const renamegroupchat=(chatId:string)=>{
+  return apiClient.patch(`/group/${chatId}`)
+}
+const addNewparticipants=(chatId:string,participantId:string)=>{
+  return apiClient.post(`/group/${chatId}/${participantId}`);
+}
+const removeParticipants=(chatId:string,participantId:string)=>{
+  return apiClient.delete(`/group/${chatId}/${participantId}`);
+}
+const leaveGroup=(chatId:string)=>{
+  return apiClient.delete(`/leave/group/${chatId}`)
+}
 export {
   loginUser,
   logoutUser,
@@ -84,5 +96,9 @@ export {
   deleteOneOnOneChat,
   createChatGroup,
   fetchgroupdetails,
-  deleteGroup
+  deleteGroup,
+  renamegroupchat,
+  addNewparticipants,
+  removeParticipants,
+  leaveGroup
 };
