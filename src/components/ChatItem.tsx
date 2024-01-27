@@ -8,6 +8,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import moment from "moment";
 import { deleteOneOnOneChat } from "../api";
 import "../styles/chatItem.css";
+import Groupcard from "./Groupcard";
 const ChatItem: React.FC<{
   chat: ChatListIteminterface;
   onCLick: (chat: ChatListIteminterface) => void;
@@ -18,6 +19,7 @@ const ChatItem: React.FC<{
   const { user } = useAuth();
   const [openoptions, setopenoptions] = useState(false);
   const [opendots, setopendots] = useState(false);
+  const [opengroupinfo, setopengroupinfo] = useState(false);
   console.log("section", chat);
   const DeleteChat = async () => {
     await requestHandler(
@@ -31,6 +33,15 @@ const ChatItem: React.FC<{
   };
   if (!chat) return;
   return (
+    <>
+    <Groupcard
+    open={opengroupinfo}
+    chatId={chat._id}
+    onClose={()=>{
+      setopengroupinfo(false);
+    }}
+    // onGroupDelete={}
+    />
     <div
       className="role"
       role="button"
@@ -38,16 +49,17 @@ const ChatItem: React.FC<{
       onMouseLeave={() => {
         setopenoptions(false);
         setopendots(false);
+        setopengroupinfo(false);
       }}
       onMouseEnter={() => setopendots(true)}
-    >
+      >
       {opendots && (
         <button
-          className="dotbutton"
-          onClick={(e) => {
-            e.stopPropagation();
-            setopenoptions(!openoptions);
-          }}
+        className="dotbutton"
+        onClick={(e) => {
+          e.stopPropagation();
+          setopenoptions(!openoptions);
+        }}
         >
           <MoreVertIcon />
         </button>
@@ -55,8 +67,8 @@ const ChatItem: React.FC<{
       {openoptions && (
         chat.isGroupChat?(
           <div>
-            <p>
-            <InfoIcon/>
+            <p className="pbut"> 
+            <InfoIcon onClick={()=>setopengroupinfo(true)}/>
               About Group
             </p>
           </div>
@@ -78,7 +90,7 @@ const ChatItem: React.FC<{
           </p>
           </div>
           )
-      )}
+          )}
       <div>
         <img className="chatItemimg" src={getChatobjectMetadata(chat, user!).avatar} alt="" />
       </div>
@@ -95,10 +107,11 @@ const ChatItem: React.FC<{
           </small>
           {unreadCount <= 0 ? null : (
             <span>{unreadCount > 9 ? "9+" : unreadCount}</span>
-          )}
+            )}
         </div>
       </div>
     </div>
+            </>
   );
 };
 

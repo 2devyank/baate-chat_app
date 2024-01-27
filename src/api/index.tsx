@@ -65,6 +65,13 @@ const createChatGroup=(data: { name: string; participants: string[] })=>{
 const deleteOneOnOneChat=(chatId:string)=>{
     return apiClient.delete(`/remove/${chatId}`)
 }
+
+const fetchgroupdetails=(chatId:string)=>{
+  return apiClient.get(`/group/${chatId}`)
+}
+const deleteGroup=(chatId:string)=>{
+  return apiClient.delete(`/group/${chatId}`)
+}
 export {
   loginUser,
   logoutUser,
@@ -75,5 +82,7 @@ export {
   getAllchats,
   createOneOnOnecount,
   deleteOneOnOneChat,
-  createChatGroup
+  createChatGroup,
+  fetchgroupdetails,
+  deleteGroup
 };

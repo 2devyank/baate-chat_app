@@ -78,7 +78,7 @@ const AddChatmodal: React.FC<{
     );
   };
   const getAllUsers = async () => {
-    requestHandler(
+   await requestHandler(
       async () => await searchAllUsers(),
       null,
       (res) => {
