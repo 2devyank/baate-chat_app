@@ -245,7 +245,7 @@ const Chat = () => {
         {currentChat.current && currentChat.current?._id ? (
           <div className="rightsection">
             <div className="sticktop">
-              <img
+              <img className="chatimg"
                 src={getChatobjectMetadata(currentChat.current!, user).avatar}
                 alt=""
               />

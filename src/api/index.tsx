@@ -59,6 +59,9 @@ const getAllchats=()=>{
 const createOneOnOnecount=(receiverId:string)=>{
     return apiClient.post(`/c/${receiverId}`)
 }
+const createChatGroup=(data: { name: string; participants: string[] })=>{
+  return apiClient.post('/group',data)
+}
 const deleteOneOnOneChat=(chatId:string)=>{
     return apiClient.delete(`/remove/${chatId}`)
 }
@@ -71,5 +74,6 @@ export {
   sendMessage,
   getAllchats,
   createOneOnOnecount,
-  deleteOneOnOneChat
+  deleteOneOnOneChat,
+  createChatGroup
 };

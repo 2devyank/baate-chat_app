@@ -59,6 +59,10 @@ width: 30%;
     height: 10%;
     width: 99%;
     /* position: absolute; */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 2px 2px;
     border-bottom: 1px solid white;
     /* top: 0px; */
 }
@@ -81,6 +85,8 @@ width: 30%;
     margin:10px;
     gap: 10px;
     flex-direction: column;
+    height: 100vh;
+    overflow-y: scroll;
 }
 .topuserinfo{
     /* border: 1px solid red; */
@@ -113,4 +119,9 @@ width: 5%;
 border: none;
 background: none;
 color: white;
+}
+.chatimg{
+    border-radius: 50%;
+   width: 40px;
+   height: 40px;
 }

@@ -5,6 +5,7 @@
    position: relative;
    padding: 15px 15px;
    border-radius: 1.4rem;
+   gap: 10px;
 
 }
 .role:hover{
@@ -44,4 +45,9 @@ display: flex;flex-direction: column;
 .smalltime{
    color: rgb(184, 175, 175);
    font-size: 13px;
+}
+.chatItemimg{
+   border-radius: 50%;
+   width: 40px;
+   height: 40px;
 }

@@ -1,4 +1,4 @@
-.chatmodal{
+.chatmodal {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -16,26 +16,39 @@
     color: white;
     border-radius: 1rem;
 }
-.auto{
+
+.auto {
     color: white;
     background-color: rgba(89, 90, 100, 0.458);
 }
-.topmodal{
- 
+
+.groupname {
+    width: 97%;
+    background-color: rgba(89, 90, 100, 0.458);
+    color: white;
+    padding: 10px 10px;
+    border-radius: 8px;
+    border-style:none ;
+}
+
+.topmodal {
+
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.butgrp{
-display: flex;
-gap: 10px;
+
+.butgrp {
+    display: flex;
+    gap: 10px;
 
 }
-.modbut{
-   width: 50%;
-   padding: 10px 10px;
-   border-radius: 2rem;
-   color: white;
+
+.modbut {
+    width: 50%;
+    padding: 10px 10px;
+    border-radius: 2rem;
+    color: white;
     background-color: rgb(29, 169, 200);
     border-style: none;
 }

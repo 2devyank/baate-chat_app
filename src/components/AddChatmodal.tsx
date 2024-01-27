@@ -14,7 +14,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { UserInterface } from "../interfaces/user.tsx";
 import "../styles/addchatmodal.css";
 import { requestHandler } from "../utils/index.tsx";
-import { createOneOnOnecount, searchAllUsers } from "../api/index.tsx";
+import { createChatGroup, createOneOnOnecount, searchAllUsers } from "../api/index.tsx";
 import Select from "./Select.tsx";
 const label = { inputProps: { "aria-label": "Switch demo" } };
 const AddChatmodal: React.FC<{
@@ -30,9 +30,12 @@ const AddChatmodal: React.FC<{
   const [isGroupChat,SetisGroupChat]=useState(false);
   const [GroupParticipants,setGroupParticipants]=useState<string[]>([]);
   const [creatingchat,setcreatingchat]=useState(false);
+  const [groupname,setGroupname]=useState<string>(" ");
   const handleClose = () => {
     setuserdata([])
     SetselectedUserId("")
+    setGroupParticipants([])
+    setGroupname("");
     onClose();
   };
 
@@ -57,6 +60,23 @@ const AddChatmodal: React.FC<{
     alert
     )
   }
+  const createGroupChat=async()=>{
+    if(!GroupParticipants) return alert('please add user');
+    await requestHandler(
+      async()=>await createChatGroup({
+        name:groupname,
+        participants:GroupParticipants
+      }),
+      setcreatingchat,
+      (res)=>{
+        const {data}=res;
+        console.log("hello moto");
+        onSuccess(data);
+        handleClose();
+        },
+      alert
+    );
+  };
   const getAllUsers = async () => {
     requestHandler(
       async () => await searchAllUsers(),
@@ -88,11 +108,14 @@ const AddChatmodal: React.FC<{
       <div className="chatmodal">
         <div className="topmodal">
           <p>Create chat</p>
-          <CancelIcon onClick={() => onClose()} />
+          <CancelIcon onClick={handleClose} />
         </div>
         <div>
-        <Switch {...label} /> Is it a Group chat ?
+        <Switch {...label} onChange={()=>SetisGroupChat(!isGroupChat)}/> Is it a Group chat ?
         </div>
+        {isGroupChat===true &&
+          <input className="groupname" type="text" value={groupname} onChange={(e)=>setGroupname(e.target.value)} />
+        }
         <div>
         <Select 
         placeholder={isGroupChat}
@@ -100,9 +123,11 @@ const AddChatmodal: React.FC<{
         onChange={({_id})=>{isGroupChat?setGroupParticipants([...GroupParticipants,_id]):SetselectedUserId(_id)}}
         />
         </div>
+        
         <div className="butgrp">
           <button onClick={handleClose} className="modbut">Close</button>
-          <button onClick={createNewChat} className="modbut">Create</button>
+          <button onClick={isGroupChat?createGroupChat:createNewChat} className="modbut">Create</button>
+          
         </div>
       </div>
     </Modal>

@@ -68,13 +68,26 @@ export const getChatobjectMetadata = (
         chat.lastMessage.attachments.length > 1 ? "s" : ""
       }`
     : "No messages yet";
-  const participant = chat.participants.find(
-    (p) => p._id !== LoggedInUser?._id
-  );
-  return {
-    avatar: participant?.avatar.url,
-    title: participant?.username,
-    description: participant?.email,
-    lastMessage,
-  };
-};
+    if(chat.isGroupChat){
+      return{
+        avatar:"https://via.placeholder.com/100x100.png",
+        title:chat.name,
+        description:`${chat.participants?.length} member in the group`,
+        lastMessage:chat.lastMessage?
+        chat.lastMessage?.sender?.username+": "+lastMessage 
+        :lastMessage,
+      };
+    }else{
+
+      const participant = chat.participants.find(
+        (p) => p._id !== LoggedInUser?._id
+        );
+        return {
+          avatar: "https://via.placeholder.com/100x100.png",
+          title: participant?.username,
+          description: participant?.email,
+          lastMessage,
+        };
+      }
+      };
+      
