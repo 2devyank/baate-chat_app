@@ -72,8 +72,8 @@ const fetchgroupdetails=(chatId:string)=>{
 const deleteGroup=(chatId:string)=>{
   return apiClient.delete(`/group/${chatId}`)
 }
-const renamegroupchat=(chatId:string)=>{
-  return apiClient.patch(`/group/${chatId}`)
+const renamegroupchat=(chatId:string,name:string)=>{
+  return apiClient.patch(`/group/${chatId}`,{name})
 }
 const addNewparticipants=(chatId:string,participantId:string)=>{
   return apiClient.post(`/group/${chatId}/${participantId}`);

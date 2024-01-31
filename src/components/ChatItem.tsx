@@ -40,7 +40,7 @@ const ChatItem: React.FC<{
     onClose={()=>{
       setopengroupinfo(false);
     }}
-    // onGroupDelete={}
+    onGroupdelete={onChatDelete}
     />
     <div
       className="role"
@@ -49,7 +49,7 @@ const ChatItem: React.FC<{
       onMouseLeave={() => {
         setopenoptions(false);
         setopendots(false);
-        setopengroupinfo(false);
+        // setopengroupinfo(false);
       }}
       onMouseEnter={() => setopendots(true)}
       >

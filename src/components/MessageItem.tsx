@@ -45,7 +45,9 @@ const MessageItem:React.FC<{
       }
   </div>
 ):null}
-    <div >{message.content}</div>
+    <div style={{fontSize:"14px",color:"black"}}>~{message.sender.username}</div>
+    <div >
+      {message.content}</div>
     </div>
 </>
   )
