@@ -1,4 +1,5 @@
 import './App.css'
+// @ts-ignore
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Register from './pages/Register.tsx'
 import Login from './pages/Login.tsx'
