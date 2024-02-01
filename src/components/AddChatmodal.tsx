@@ -1,11 +1,6 @@
 import {
-  Autocomplete,
-  Box,
-  Button,
   Modal,
   Switch,
-  TextField,
-  Typography,
 } from "@mui/material";
 // import Select, { GroupBase } from "react-select"
 import React, { useEffect, useState } from "react";
@@ -29,6 +24,7 @@ const AddChatmodal: React.FC<{
   const [selectedUserId,SetselectedUserId]=useState<null|string>(null);
   const [isGroupChat,SetisGroupChat]=useState(false);
   const [GroupParticipants,setGroupParticipants]=useState<string[]>([]);
+  // @ts-ignore
   const [creatingchat,setcreatingchat]=useState(false);
   const [groupname,setGroupname]=useState<string>(" ");
   const handleClose = () => {

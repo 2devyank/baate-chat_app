@@ -15,6 +15,7 @@ const Adduser: React.FC<{
   }> = ({ chatId,open, onClose, onSuccess }) => {
     const [user,setusers]=useState<UserInterface[]>([]);
     const [participant,setparticipant]=useState<string>("");
+    // @ts-ignore
     const [fake,setfake]=useState(false);
     const handleClose=()=>{
         onClose();

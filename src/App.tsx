@@ -9,7 +9,7 @@ function App() {
 
   return (
    
-    // <BrowserRouter>
+    <BrowserRouter>
      <div>
      <Routes>
       <Route path="/register" element={<Register/>} />
@@ -17,7 +17,7 @@ function App() {
       <Route path="/chat" element={<Chat/>} />
      </Routes>
      </div>
-    //  </BrowserRouter>
+     </BrowserRouter>
     
   )
 }

@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import { ChatMessageInterface } from '../interfaces/chat'
 import "../styles/messagetext.css"
-import PageviewIcon from '@mui/icons-material/Pageview';
-import CloseIcon from '@mui/icons-material/Close';
+// @ts-ignore
 const MessageItem:React.FC<{
     isOwnMessage?:boolean;
     isGroupChatMessage?:boolean;
     message:ChatMessageInterface;
+    // @ts-ignore
 }>=({isOwnMessage,isGroupChatMessage,message})=> {
+  // @ts-ignore
  const [resizedImage,setResizedImage]=useState<string|null>(null);
+ // @ts-ignore
  const [openvisible,setopenvisible]=useState(true);
  
   return (

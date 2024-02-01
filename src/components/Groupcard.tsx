@@ -13,7 +13,7 @@ const Groupcard: React.FC<{
   chatId: string;
   onGroupdelete:(chatId:string)=>void;
 }> = ({ open, onClose, chatId,onGroupdelete }) => {
-  
+  // @ts-ignore
   const [userdata, setuserdata] = useState<UserInterface[]>([]);
   const [groupdata, setgroupdata] = useState<ChatListIteminterface[]>([]);
   const [groupparticipants,setgroupparticipants]=useState<UserInterface[]>([]);

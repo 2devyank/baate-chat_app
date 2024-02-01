@@ -15,7 +15,7 @@ const ChatItem: React.FC<{
   isActive?: boolean;
   unreadCount?: number;
   onChatDelete: (chatId: string) => void;
-  
+  // @ts-ignore
 }> = ({ chat, onCLick, isActive, unreadCount = 0, onChatDelete }) => {
   const { user,rename_id,renameall } = useAuth();
   const [openoptions, setopenoptions] = useState(false);

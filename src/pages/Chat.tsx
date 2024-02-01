@@ -18,11 +18,11 @@ const CONNECTED_EVENT = "connected";
 const DISCONNECTED_EVENT = "disconnect";
 const JOIN_CHAT_EVENT = "joinChat";
 const NEW_CHAT_EVENT = "newChat";
-const TYPING_EVENT = "typing";
-const STOP_TYPING_EVENT = "stopTyping";
+// const TYPING_EVENT = "typing";
+// const STOP_TYPING_EVENT = "stopTyping";
 const MESSAGE_RECEIVED_EVENT = "messageReceived";
 const LEAVE_CHAT_EVENT = "leaveChat";
-const UPDATE_GROUP_NAME_EVENT = "updateGroupName";
+// const UPDATE_GROUP_NAME_EVENT = "updateGroupName";
 const Chat = () => {
   const { user ,rename_id,renameall} = useAuth();
   const { socket } = useSocket();
@@ -40,6 +40,7 @@ const Chat = () => {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [message, setmessage] = useState("");
   const [messages, setmessages] = useState<ChatMessageInterface[]>([]);
+  // @ts-ignore
   const [Isconnected, setIsConnected] = useState(false);
   const getMessages = async () => {
     if (!currentChat.current?._id) return alert("no chat selected");
@@ -96,7 +97,7 @@ const Chat = () => {
   };
   console.log("phela", messages);
   console.log("dusra", message);
-  const handleOnMessageChange = () => {};
+  // const handleOnMessageChange = () => {};
   const onConnect = () => {
     setIsConnected(true);
   };
