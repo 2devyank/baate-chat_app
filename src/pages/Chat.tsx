@@ -24,7 +24,7 @@ const MESSAGE_RECEIVED_EVENT = "messageReceived";
 const LEAVE_CHAT_EVENT = "leaveChat";
 const UPDATE_GROUP_NAME_EVENT = "updateGroupName";
 const Chat = () => {
-  const { user } = useAuth();
+  const { user ,rename_id,renameall} = useAuth();
   const { socket } = useSocket();
   const viewref = useRef<HTMLDivElement>(null);
   const currentChat = useRef<ChatListIteminterface | null>(null);
@@ -251,7 +251,7 @@ const Chat = () => {
               />
               <div className="topuserinfo">
                 <span>
-                  {getChatobjectMetadata(currentChat.current!, user).title}
+                  {currentChat.current._id===rename_id?(renameall?renameall:getChatobjectMetadata(currentChat.current!, user).title):( getChatobjectMetadata(currentChat.current!, user).title)}
                 </span>
                 <small className="small">
                   {

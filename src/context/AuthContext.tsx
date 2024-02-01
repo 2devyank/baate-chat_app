@@ -15,14 +15,21 @@ const AuthContext = createContext<{
     password: string;
   }) => Promise<void>;
   logout: () => Promise<void>;
+  rename_id:string|null;
+  renameall:string|null;
+  setrename_id:Dispatch<SetStateAction<string>>
+  setrenameall:Dispatch<SetStateAction<string>>
 }>({
   user: null,
   token: null,
   login: async () => {},
   register: async () => {},
   logout: async () => {},
+  rename_id:null,
+  renameall:null,
+  setrename_id:()=>{},
+  setrenameall:()=>{},
 });
-
 const useAuth = () => useContext(AuthContext);
 
 const AuthProvider :React.FC<{children:React.ReactNode}>= ({ children }) => {
@@ -30,7 +37,9 @@ const AuthProvider :React.FC<{children:React.ReactNode}>= ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<UserInterface | null>(null);
   const [token, setToken] = useState<string | null>(null);
-
+  
+  const [rename_id,setrename_id]=useState("");
+  const [renameall,setrenameall]=useState("");
   const register = async (data: {
     username: string;
     email: string;
@@ -98,7 +107,7 @@ const AuthProvider :React.FC<{children:React.ReactNode}>= ({ children }) => {
  
   return (
     <AuthContext.Provider
-      value={{ logout,user, login, register, token }}
+      value={{ logout,user, login, register, token,rename_id,setrename_id,renameall,setrenameall }}
     >
         {isLoading?<Loader/>:children}
     </AuthContext.Provider>

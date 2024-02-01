@@ -17,7 +17,7 @@ const ChatItem: React.FC<{
   onChatDelete: (chatId: string) => void;
   
 }> = ({ chat, onCLick, isActive, unreadCount = 0, onChatDelete }) => {
-  const { user } = useAuth();
+  const { user,rename_id,renameall } = useAuth();
   const [openoptions, setopenoptions] = useState(false);
   const [opendots, setopendots] = useState(false);
   const [opengroupinfo, setopengroupinfo] = useState(false);
@@ -99,7 +99,7 @@ const ChatItem: React.FC<{
       </div>
       <div className="headone">
         <div className="tilecard">
-          <span>{getChatobjectMetadata(chat, user).title}</span>
+          <span>{chat._id===rename_id?(renameall?renameall:getChatobjectMetadata(chat, user).title):(getChatobjectMetadata(chat, user).title)}</span>
           <small className="smalllasttext">
             {getChatobjectMetadata(chat, user).lastMessage}
           </small>

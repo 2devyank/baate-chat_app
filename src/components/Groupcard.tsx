@@ -112,7 +112,7 @@ console.log("group info",groupdata[0]?.name)
   console.log("hamara group ka data",groupdata )
   console.log("hamara group ka naam",groupname )
   console.log("hamara group ka users",groupparticipants )
-  
+  const {setrenameall,setrename_id}=useAuth();
   return (
     <>
     <Adduser
@@ -125,18 +125,21 @@ console.log("group info",groupdata[0]?.name)
     />
     <div style={{top:"0px",right:"0px",zIndex:"1",position:"absolute",display:open?"flex":"none",flexDirection:"column",height:"100vh",width:"50%",background:"rgba(89, 90, 100, 0.458)",color:"white"}}>
       <div style={{height:"40%",display:"flex",alignItems:"center",justifyContent:"center",borderBottom:"1px solid black"}}>
-     <span>
+     <span style={{fontSize:"34px",display:"flex",gap:"10px"}}>
       
-      {openrename?(<input value={groupname} onKeyDown={(e)=>{
+      {openrename?(<input style={{padding:"10px 10px",fontSize:"14px",borderRadius:"8px",borderStyle:"none"}} value={groupname} onKeyDown={(e)=>{
         if(e.key==="Enter"){
           renamegroup();
-         
+          setrenameall(groupname);
+          setrename_id(chatId);
           setopenrename(false);
 
         }
       }}  onChange={(e)=>setgroupname(e.target.value)}/>):(groupname)}
       </span>
-      <EditIcon onClick={()=>setopenrename(true)}/>
+      <span>
+        <EditIcon style={{cursor:"pointer"}} onClick={()=>setopenrename(true)}/>
+        </span>
       </div>
     <div style={{position:"absolute",top:"0px",right:"0px"}}>
     <CloseIcon onClick={handleClose}/>
@@ -146,14 +149,14 @@ console.log("group info",groupdata[0]?.name)
           return (
             <div style={{display:"flex",justifyContent:"space-between",padding:"20px",borderBottom:"1px solid black"}}>
             <span>{item.username}</span>
-            <button onClick={()=>removegroupparticipants(item._id)}>remove</button>
+            <button style={{padding:"2px 2px",borderRadius:"6px",cursor:"pointer",background:"lightgrey"}} onClick={()=>removegroupparticipants(item._id)}>remove</button>
             </div>
           )
         })}
       </div>
       <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-        <button onClick={()=>setopenaddname(true)} style={{padding:"10px 10px",background:"rgb(29, 169, 200)"}}>Add Participant</button>
-        <button onClick={deletegroupchat} style={{padding:"10px 10px",background:"rgb(29, 169, 200)"}}>Delete Group</button>
+        <button onClick={()=>setopenaddname(true)} style={{cursor:"pointer",padding:"10px 10px",background:"rgb(29, 169, 200)"}}>Add Participant</button>
+        <button onClick={deletegroupchat} style={{cursor:"pointer",padding:"10px 10px",background:"rgb(29, 169, 200)"}}>Delete Group</button>
       </div>
     </div>
         </>
