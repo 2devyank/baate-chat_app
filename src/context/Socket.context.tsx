@@ -7,7 +7,6 @@ const getSocket=()=>{
 
     return socketio(
         import.meta.env.VITE_SOCKET_URI,{
-
             withCredentials:true,
             auth:{token},
         }
