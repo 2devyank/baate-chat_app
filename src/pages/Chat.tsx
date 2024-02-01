@@ -208,7 +208,7 @@ const Chat = () => {
                 .map((chat) => {
                   return (
                     <ChatItem
-                      chat={chat}
+                      chat={chat} 
                       isActive={chat._id === currentChat.current?._id}
                       unreadCount={
                         unreadMessages.filter((n) => n.chat === chat._id).length

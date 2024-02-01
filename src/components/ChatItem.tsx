@@ -15,12 +15,14 @@ const ChatItem: React.FC<{
   isActive?: boolean;
   unreadCount?: number;
   onChatDelete: (chatId: string) => void;
+  
 }> = ({ chat, onCLick, isActive, unreadCount = 0, onChatDelete }) => {
   const { user } = useAuth();
   const [openoptions, setopenoptions] = useState(false);
   const [opendots, setopendots] = useState(false);
   const [opengroupinfo, setopengroupinfo] = useState(false);
   console.log("section", chat);
+ 
   const DeleteChat = async () => {
     await requestHandler(
       async () => await deleteOneOnOneChat(chat._id),
@@ -41,6 +43,7 @@ const ChatItem: React.FC<{
       setopengroupinfo(false);
     }}
     onGroupdelete={onChatDelete}
+    
     />
     <div
       className="role"

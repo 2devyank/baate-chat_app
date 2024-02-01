@@ -6,6 +6,7 @@ import { ChatListIteminterface } from "../interfaces/chat";
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import Adduser from "./Adduser";
+import { useAuth } from "../context/AuthContext";
 const Groupcard: React.FC<{
   open: boolean;
   onClose: () => void;
@@ -89,7 +90,7 @@ const Groupcard: React.FC<{
       (res)=>{
         const {data}=res;
         setgroupname(data[0].name);
-
+       
       },
       alert
     )
@@ -111,6 +112,7 @@ console.log("group info",groupdata[0]?.name)
   console.log("hamara group ka data",groupdata )
   console.log("hamara group ka naam",groupname )
   console.log("hamara group ka users",groupparticipants )
+  
   return (
     <>
     <Adduser
@@ -128,7 +130,9 @@ console.log("group info",groupdata[0]?.name)
       {openrename?(<input value={groupname} onKeyDown={(e)=>{
         if(e.key==="Enter"){
           renamegroup();
+         
           setopenrename(false);
+
         }
       }}  onChange={(e)=>setgroupname(e.target.value)}/>):(groupname)}
       </span>

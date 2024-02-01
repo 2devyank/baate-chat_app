@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { UserInterface } from "../interfaces/user";
 import { LocalStorage, requestHandler } from "../utils";
 import { loginUser, logoutUser, registerUser } from "../api";
@@ -95,6 +95,7 @@ const AuthProvider :React.FC<{children:React.ReactNode}>= ({ children }) => {
     }
     setIsLoading(false);
   },[])
+ 
   return (
     <AuthContext.Provider
       value={{ logout,user, login, register, token }}
