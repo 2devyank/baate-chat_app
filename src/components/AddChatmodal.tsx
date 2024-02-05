@@ -4,13 +4,13 @@ import {
 } from "@mui/material";
 // import Select, { GroupBase } from "react-select"
 import React, { useEffect, useState } from "react";
-import { ChatListIteminterface } from "../interfaces/chat.tsx";
+import { ChatListIteminterface } from "../interfaces/chat";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { UserInterface } from "../interfaces/user.tsx";
+import { UserInterface } from "../interfaces/user";
 import "../styles/addchatmodal.css";
-import { requestHandler } from "../utils/index.tsx";
-import { createChatGroup, createOneOnOnecount, searchAllUsers } from "../api/index.tsx";
-import Select from "./Select.tsx";
+import { requestHandler } from "../utils/index";
+import { createChatGroup, createOneOnOnecount, searchAllUsers } from "../api/index";
+import Select from "./Select";
 const label = { inputProps: { "aria-label": "Switch demo" } };
 const AddChatmodal: React.FC<{
   open: boolean;
