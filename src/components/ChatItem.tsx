@@ -12,8 +12,8 @@ import Groupcard from "./Groupcard";
 const ChatItem: React.FC<{
   chat: ChatListIteminterface;
   onCLick: (chat: ChatListIteminterface) => void;
-  isActive?: boolean;
-  unreadCount?: number;
+  isActive?: boolean|undefined;
+  unreadCount?: number|undefined;
   onChatDelete: (chatId: string) => void;
   // @ts-ignore
 }> = ({ chat, onCLick, isActive, unreadCount = 0, onChatDelete }) => {
@@ -33,7 +33,10 @@ const ChatItem: React.FC<{
       alert
     );
   };
-  if (!chat) return;
+  if (!chat){
+    return null;
+  }
+
   return (
     <>
     <Groupcard
