@@ -19,6 +19,9 @@ chat:string;
 attachments:{
     url:string;
     localPath:string;
+    publicId?:string;
+    resourceType?:string;
+    originalName?:string;
     _id:string;
 }[];
 createdAt:string;

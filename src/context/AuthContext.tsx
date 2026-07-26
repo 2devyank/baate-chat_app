@@ -4,6 +4,7 @@ import { LocalStorage, requestHandler } from "../utils";
 import { loginUser, logoutUser, registerUser } from "../api";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
+import { showToast } from "../components/ToastProvider";
 
 const AuthContext = createContext<{
   user: UserInterface | null;
@@ -48,10 +49,15 @@ const AuthProvider :React.FC<{children:React.ReactNode}>= ({ children }) => {
     console.log("async")
     await requestHandler(
       async () => await registerUser(data),
-      setIsLoading,
-      () => {
-        alert("Account created successfullt !");
-        navigate("/login");
+      null,
+      (res) => {
+        const { data } = res;
+        setUser(data.user);
+        setToken(data.accessToken);
+        LocalStorage.set("user", data.user);
+        LocalStorage.set("token", data.accessToken);
+        showToast("Account created! Welcome aboard.", "success");
+        navigate("/chat");
       },
       
       alert
@@ -67,7 +73,7 @@ const AuthProvider :React.FC<{children:React.ReactNode}>= ({ children }) => {
     await requestHandler(
       //api
       async () => await loginUser(data),
-      setIsLoading,
+      null,
       (res) => {
         const { data } = res;
         setUser(data.user);

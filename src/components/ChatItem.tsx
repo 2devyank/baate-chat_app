@@ -9,6 +9,7 @@ import moment from "moment";
 import { deleteOneOnOneChat } from "../api";
 import "../styles/chatItem.css";
 import Groupcard from "./Groupcard";
+import ChatAvatar from "./ChatAvatar";
 const ChatItem: React.FC<{
   chat: ChatListIteminterface;
   onCLick: (chat: ChatListIteminterface) => void;
@@ -22,6 +23,9 @@ const ChatItem: React.FC<{
   const [opendots, setopendots] = useState(false);
   const [opengroupinfo, setopengroupinfo] = useState(false);
   console.log("section", chat);
+  const metadata = getChatobjectMetadata(chat, user);
+  const title =
+    chat._id === rename_id ? renameall || metadata.title : metadata.title;
  
   const DeleteChat = async () => {
     await requestHandler(
@@ -49,9 +53,16 @@ const ChatItem: React.FC<{
     
     />
     <div
-      className="role"
+      className={`role${isActive ? " roleactive" : ""}`}
       role="button"
+      tabIndex={0}
       onClick={() => onCLick(chat)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onCLick(chat);
+        }
+      }}
       onMouseLeave={() => {
         setopenoptions(false);
         setopendots(false);
@@ -66,53 +77,66 @@ const ChatItem: React.FC<{
           e.stopPropagation();
           setopenoptions(!openoptions);
         }}
+        aria-label="Open chat actions"
         >
           <MoreVertIcon />
         </button>
       )}
       {openoptions && (
         chat.isGroupChat?(
-          <div>
-            <p className="pbut"> 
-            <InfoIcon onClick={()=>setopengroupinfo(true)}/>
+          <div className="chatitemmenu">
+            <button
+              className="pbut"
+              onClick={(e) => {
+                e.stopPropagation();
+                setopengroupinfo(true);
+              }}
+              type="button"
+            > 
+              <InfoIcon />
               About Group
-            </p>
+            </button>
           </div>
         ):(
-          <div>
-          <p
-          className="pbut"
-          onClick={(e) => {
-            e.stopPropagation();
-            const ok = confirm("are you sure you want to delete");
-            if (ok) {
-              DeleteChat();
-            }
-          }}
-          role="button"
+          <div className="chatitemmenu">
+          <button
+            className="pbut"
+            onClick={(e) => {
+              e.stopPropagation();
+              const ok = confirm("are you sure you want to delete");
+              if (ok) {
+                DeleteChat();
+              }
+            }}
+            type="button"
           >
-          <DeleteIcon />
-          Delete Chat
-          </p>
+            <DeleteIcon />
+            Delete Chat
+          </button>
           </div>
           )
           )}
-      <div>
-        <img className="chatItemimg" src={getChatobjectMetadata(chat, user!).avatar} alt="" />
-      </div>
+      <ChatAvatar
+        className="chatItemimg"
+        src={metadata.avatar}
+        title={title}
+      />
       <div className="headone">
         <div className="tilecard">
-          <span>{chat._id===rename_id?(renameall?renameall:getChatobjectMetadata(chat, user).title):(getChatobjectMetadata(chat, user).title)}</span>
+          <div className="chatitemtitleline">
+            <span className="chatitemtitle">{title}</span>
+            {chat.isGroupChat ? <span className="groupbadge">Group</span> : null}
+          </div>
           <small className="smalllasttext">
-            {getChatobjectMetadata(chat, user).lastMessage}
+            {metadata.lastMessage}
           </small>
         </div>
-        <div>
+        <div className="chatitemmeta">
           <small className="smalltime">
             {moment(chat.updatedAt).add("TIME_ZONE", "hours").fromNow(true)}
           </small>
           {unreadCount <= 0 ? null : (
-            <span>{unreadCount > 9 ? "9+" : unreadCount}</span>
+            <span className="unreadbadge">{unreadCount > 9 ? "9+" : unreadCount}</span>
             )}
         </div>
       </div>

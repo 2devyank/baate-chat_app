@@ -1,53 +1,415 @@
-.role{
-   color: white;
-   /* border: 1px solid white; */
-   display: flex;
-   position: relative;
-   padding: 15px 15px;
-   border-radius: 1.4rem;
-   gap: 10px;
-
-}
-.role:hover{
-   border: 1px solid white;
-   background-color: rgba(89, 90, 100, 0.458);
-}
-.tilecard{
-display: flex;flex-direction: column;
-}
-.headone{
-    display: flex;
- width: 100%;
- justify-content: space-between;
-}
-.pbut{
-   display: flex;
-   position: absolute;
-   left: 0px;
-   bottom: -65px;
-   background-color: rgba(89, 90, 100, 458);
-   z-index: 1;
-   color:white ;
-   padding: 15px 15px;
-   border-radius:6px ;
+.chatavatar {
+   display: inline-flex;
    align-items: center;
-}
-.dotbutton{
-   background-color: none;
-   background: none;
-   color: white;
-   border-style: none;
-}
-.smalllasttext{
-   color: grey;
-   font-size: 13px;
-}
-.smalltime{
-   color: rgb(184, 175, 175);
-   font-size: 13px;
-}
-.chatItemimg{
+   justify-content: center;
+   color: #ffffff;
+   flex: 0 0 auto;
+   overflow: hidden;
    border-radius: 50%;
-   width: 40px;
-   height: 40px;
+   border: 1px solid rgba(255, 255, 255, 0.14);
+   font-weight: 850;
+   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.chatavatar img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+}
+
+.chatavatar span {
+   line-height: 1;
+}
+
+.chatimg {
+   width: 46px;
+   height: 46px;
+   font-size: 1.05rem;
+}
+
+.chatItemimg {
+   width: 46px;
+   height: 46px;
+   font-size: 1rem;
+}
+
+.role {
+   position: relative;
+   display: flex;
+   gap: 12px;
+   padding: 14px 12px;
+   color: #ffffff;
+   border: 1px solid transparent;
+   border-radius: 8px;
+   outline: none;
+   cursor: pointer;
+   transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.role:hover,
+.role:focus-visible,
+.roleactive {
+   border-color: rgba(226, 232, 240, 0.2);
+   background: rgba(89, 90, 100, 0.46);
+}
+
+.role:hover {
+   transform: translateY(-1px);
+}
+
+.headone {
+   display: flex;
+   min-width: 0;
+   width: 100%;
+   justify-content: space-between;
+   gap: 12px;
+}
+
+.tilecard {
+   display: flex;
+   min-width: 0;
+   flex-direction: column;
+   gap: 4px;
+}
+
+.chatitemtitleline {
+   display: flex;
+   min-width: 0;
+   align-items: center;
+   gap: 8px;
+}
+
+.chatitemtitle {
+   max-width: 172px;
+   overflow: hidden;
+   color: #ffffff;
+   font-size: 1rem;
+   font-weight: 850;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.groupbadge {
+   flex: 0 0 auto;
+   padding: 2px 7px;
+   color: #a5f3fc;
+   font-size: 0.7rem;
+   font-weight: 850;
+   border: 1px solid rgba(34, 211, 238, 0.28);
+   border-radius: 999px;
+   background: rgba(14, 116, 144, 0.22);
+}
+
+.smalllasttext {
+   max-width: 220px;
+   overflow: hidden;
+   color: #8f95a3;
+   font-size: 0.86rem;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.chatitemmeta {
+   display: flex;
+   flex: 0 0 auto;
+   flex-direction: column;
+   align-items: flex-end;
+   gap: 8px;
+}
+
+.smalltime {
+   color: #b8bdc9;
+   font-size: 0.83rem;
+   white-space: nowrap;
+}
+
+.unreadbadge {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   min-width: 22px;
+   height: 22px;
+   padding: 0 6px;
+   color: #ffffff;
+   font-size: 0.75rem;
+   font-weight: 850;
+   border-radius: 999px;
+   background: #22aeca;
+}
+
+.dotbutton {
+   position: absolute;
+   top: 9px;
+   right: 8px;
+   z-index: 2;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 34px;
+   height: 34px;
+   color: #ffffff;
+   border: 0;
+   border-radius: 50%;
+   background: rgba(3, 3, 15, 0.7);
+   cursor: pointer;
+}
+
+.dotbutton:hover {
+   background: rgba(89, 90, 100, 0.84);
+}
+
+.chatitemmenu {
+   position: absolute;
+   top: 50px;
+   right: 10px;
+   z-index: 3;
+}
+
+.pbut {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   padding: 10px 12px;
+   color: #ffffff;
+   white-space: nowrap;
+   border: 1px solid rgba(226, 232, 240, 0.16);
+   border-radius: 8px;
+   background: #1f2937;
+   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
+   cursor: pointer;
+}
+
+.pbut:hover {
+   background: #273449;
+}
+
+.groupdrawer {
+   position: fixed;
+   top: 0;
+   right: 0;
+   z-index: 10;
+   display: none;
+   flex-direction: column;
+   width: min(43vw, 560px);
+   min-width: 390px;
+   height: 100vh;
+   color: #ffffff;
+   border-left: 1px solid rgba(226, 232, 240, 0.2);
+   background: #252637;
+   box-shadow: -28px 0 70px rgba(0, 0, 0, 0.34);
+}
+
+.groupdraweropen {
+   display: flex;
+}
+
+.groupdrawertopbar {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   min-height: 62px;
+   padding: 0 18px 0 24px;
+   color: #e2e8f0;
+   font-weight: 850;
+   border-bottom: 1px solid rgba(0, 0, 0, 0.22);
+}
+
+.groupdrawerhero {
+   min-height: 168px;
+   display: flex;
+   align-items: center;
+   gap: 16px;
+   padding: 24px;
+   border-bottom: 1px solid rgba(0, 0, 0, 0.28);
+   background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0));
+}
+
+.groupdraweravatar {
+   width: 76px;
+   height: 76px;
+   font-size: 1.7rem;
+}
+
+.groupdraweridentity {
+   display: flex;
+   min-width: 0;
+   flex: 1;
+   flex-direction: column;
+   gap: 10px;
+}
+
+.groupdrawertitlerow {
+   display: flex;
+   min-width: 0;
+   align-items: center;
+   gap: 8px;
+}
+
+.groupdrawertitle {
+   margin: 0;
+   max-width: 100%;
+   overflow: hidden;
+   font-size: clamp(1.8rem, 3vw, 2.6rem);
+   line-height: 1;
+   font-weight: 850;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.grouprenameinput {
+   width: min(360px, 70vw);
+   padding: 12px 14px;
+   color: #ffffff;
+   font: inherit;
+   font-size: 1rem;
+   border: 1px solid rgba(226, 232, 240, 0.24);
+   border-radius: 8px;
+   outline: none;
+   background: rgba(15, 23, 42, 0.88);
+}
+
+.grouprenameinput:focus {
+   border-color: rgba(34, 174, 202, 0.72);
+   box-shadow: 0 0 0 3px rgba(34, 174, 202, 0.14);
+}
+
+.groupiconbutton {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 38px;
+   height: 38px;
+   color: #ffffff;
+   border: 0;
+   border-radius: 50%;
+   background: transparent;
+   cursor: pointer;
+   transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.groupiconbutton:hover {
+   background: rgba(255, 255, 255, 0.1);
+   transform: translateY(-1px);
+}
+
+.groupstatusrow {
+   display: none;
+}
+
+.groupstatusbadge {
+   padding: 5px 12px;
+   color: #a5f3fc;
+   font-size: 0.86rem;
+   font-weight: 850;
+   border: 1px solid rgba(34, 211, 238, 0.28);
+   border-radius: 999px;
+   background: rgba(14, 116, 144, 0.22);
+}
+
+.groupparticipants {
+   display: flex;
+   min-height: 0;
+   flex-direction: column;
+   overflow-y: auto;
+}
+
+.groupsectionheader {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 16px 24px 10px;
+   color: #f8fafc;
+   font-weight: 850;
+}
+
+.groupsectionheader small {
+   color: #a8adbb;
+   font-size: 0.82rem;
+   font-weight: 750;
+}
+
+.groupparticipant {
+   min-height: 68px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 16px;
+   padding: 0 24px;
+   color: #f8fafc;
+   font-size: 1rem;
+   font-weight: 750;
+   border-bottom: 1px solid rgba(0, 0, 0, 0.36);
+}
+
+.groupparticipantidentity {
+   display: flex;
+   min-width: 0;
+   align-items: center;
+   gap: 12px;
+}
+
+.groupparticipantidentity span {
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.groupparticipantavatar {
+   width: 36px;
+   height: 36px;
+   font-size: 0.9rem;
+}
+
+.groupremovebutton {
+   padding: 7px 10px;
+   color: #111827;
+   font: inherit;
+   font-weight: 750;
+   border: 1px solid rgba(226, 232, 240, 0.24);
+   border-radius: 8px;
+   background: rgba(226, 232, 240, 0.88);
+   cursor: pointer;
+   transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.groupremovebutton:hover {
+   background: #ffffff;
+   transform: translateY(-1px);
+}
+
+.groupactions {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+   margin-top: auto;
+   padding: 16px 24px 20px;
+   border-top: 1px solid rgba(0, 0, 0, 0.28);
+}
+
+.groupactions button {
+   padding: 14px;
+   color: #03131a;
+   font-size: 1rem;
+   font-weight: 850;
+   border: 1px solid rgba(3, 19, 26, 0.4);
+   border-radius: 8px;
+   background: rgb(29, 169, 200);
+   cursor: pointer;
+   transition: background-color 160ms ease, filter 160ms ease;
+}
+
+.groupactions button:hover {
+   background: #2dbbd7;
+   filter: brightness(1.04);
+}
+
+@media (max-width: 820px) {
+   .groupdrawer {
+      width: 100vw;
+      min-width: 0;
+   }
+
+   .groupdrawerhero {
+      min-height: 160px;
+   }
 }

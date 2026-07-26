@@ -3,6 +3,7 @@
 import "../styles/register.css";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
 function Register() {
   const [data, setData] = useState({
@@ -25,46 +26,61 @@ function Register() {
   console.log(data);
   return (
     <div className="chatappcontainer">
-      <div className="headapp">Chai Pe Charcha App</div>
-
-      <div className="lockcontainer">
-        <div>Register</div>
-        <div className="formdetails">
-          {/* name */}
-          <input
-            className="inputfield"
-            placeholder="username..."
-            onChange={handledatachange("username")}
-          />
-          {/* email */}
-          <input
-            className="inputfield"
-            placeholder="email..."
-            onChange={handledatachange("email")}
-          />
-          {/* password */}
-          <input
-            className="inputfield"
-            placeholder="password..."
-            onChange={handledatachange("password")}
-          />
-          {/* button */}
-          <button onClick={handleRegister} className="registerbutton">
-            Register
-          </button>
-          {/* <div> */}
-          {/* </div> */}
-        </div>
-        <div>
-          Already have an account ?{" "}
-          <a
-            style={{ textDecoration: "none", color: "rgb(166, 166, 251)" }}
-            href="/login"
-          >
-            login
-          </a>
-        </div>
+      <div className="authhero">
+        <p className="autheyebrow">Join the conversation</p>
+        <h1 className="headapp">Chai Pe Charcha</h1>
       </div>
+
+      <section className="lockcontainer" aria-labelledby="register-title">
+        <div className="authheader">
+          <h2 id="register-title">Create your account</h2>
+          <p>Set up your profile and start chatting with your people.</p>
+        </div>
+        <div className="formdetails">
+          <label className="fieldgroup" htmlFor="register-username">
+            <span>Username</span>
+            <input
+              id="register-username"
+              className="inputfield"
+              placeholder="Choose a username"
+              onChange={handledatachange("username")}
+            />
+          </label>
+
+          <label className="fieldgroup" htmlFor="register-email">
+            <span>Email</span>
+            <input
+              id="register-email"
+              className="inputfield"
+              placeholder="you@example.com"
+              type="email"
+              onChange={handledatachange("email")}
+            />
+          </label>
+
+          <label className="fieldgroup" htmlFor="register-password">
+            <span>Password</span>
+            <input
+              id="register-password"
+              className="inputfield"
+              placeholder="Create a password"
+              type="password"
+              onChange={handledatachange("password")}
+            />
+          </label>
+
+          <button onClick={handleRegister} className="registerbutton" type="button">
+            Create account
+          </button>
+        </div>
+
+        <p className="authswitch">
+          Already have an account?{" "}
+          <Link className="authlink" to="/login">
+            Login
+          </Link>
+        </p>
+      </section>
     </div>
   );
 }

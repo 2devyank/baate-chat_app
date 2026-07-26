@@ -1,48 +1,184 @@
-.chatappcontainer{
-    width:auto ;
-    height: 100dvh;
-   
+.chatappcontainer {
+    min-height: 100dvh;
+    box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
-gap: 40px;
+    gap: 32px;
     flex-direction: column;
-    color: white;
-    background-color: rgb(4, 4, 19);
+    color: #f8fafc;
+    padding: 32px 20px;
+    background:
+        radial-gradient(circle at top left, rgba(34, 174, 202, 0.2), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(14, 116, 144, 0.14), transparent 30%),
+        linear-gradient(135deg, #03030f 0%, #111827 54%, #06151f 100%);
 }
-.formdetails{
+
+.authhero {
     display: flex;
     flex-direction: column;
-    /* border: 1px solid red; */
-    gap: 10px;
-    width: 70%;
-    color: white;
-}
-.lockcontainer{
-    width: 50%;
-    display: flex;
-    border: 0.5px solid white;
-    flex-direction: column;
-    padding: 20px 20px;
-    gap: 20px;
     align-items: center;
-    border-radius: 10px;
+    gap: 8px;
+    text-align: center;
 }
-.registerbutton{
-    background-color: rgb(166, 166, 251);
-    border-radius: 7px;
-    padding: 7px 7px;
+
+.autheyebrow {
+    margin: 0;
+    color: #67e8f9;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.headapp {
+    margin: 0;
+    font-size: clamp(2rem, 6vw, 3.25rem);
+    line-height: 1.05;
+    font-weight: 800;
+}
+
+.lockcontainer {
+    width: min(100%, 440px);
+    box-sizing: border-box;
+    display: flex;
+    border: 1px solid rgba(226, 232, 240, 0.14);
+    flex-direction: column;
+    padding: 28px;
+    gap: 24px;
+    align-items: stretch;
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.84);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+    backdrop-filter: blur(18px);
+}
+
+.authheader {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+}
+
+.authheader h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.55rem;
+    line-height: 1.2;
+}
+
+.authheader p,
+.authswitch {
+    margin: 0;
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.formdetails {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
     color: white;
-   
 }
-.headapp{
-    font-size: 40px;
+
+.fieldgroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    font-weight: 650;
 }
-.inputfield{
-    /* color: white; */
-    padding: 7px 7px;
-    border: 0.5px solid white;
-    background-color:rgb(9, 9, 37) ;
-    border-radius: 7px;
-    color: white;
+
+.inputfield {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 14px;
+    border: 1px solid rgba(148, 163, 184, 0.38);
+    background-color: rgba(15, 23, 42, 0.92);
+    border-radius: 8px;
+    color: #ffffff;
+    font: inherit;
+    outline: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.inputfield::placeholder {
+    color: #64748b;
+}
+
+.inputfield:hover {
+    border-color: rgba(34, 174, 202, 0.72);
+}
+
+.inputfield:focus {
+    border-color: #22aeca;
+    background-color: rgba(15, 23, 42, 1);
+    box-shadow: 0 0 0 4px rgba(34, 174, 202, 0.15);
+}
+
+.registerbutton {
+    width: 100%;
+    min-height: 46px;
+    border: 0;
+    background: linear-gradient(135deg, #22aeca 0%, #67e8f9 100%);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: #020617;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 14px 32px rgba(56, 189, 248, 0.2);
+    transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+
+.registerbutton:hover {
+    box-shadow: 0 18px 38px rgba(56, 189, 248, 0.28);
+    filter: brightness(1.04);
+    transform: translateY(-1px);
+}
+
+.registerbutton:active {
+    box-shadow: 0 10px 24px rgba(56, 189, 248, 0.18);
+    transform: translateY(0);
+}
+
+.registerbutton:focus-visible,
+.authlink:focus-visible {
+    outline: 3px solid rgba(34, 174, 202, 0.42);
+    outline-offset: 3px;
+}
+
+.authswitch {
+    text-align: center;
+}
+
+.authlink {
+    color: #67e8f9;
+    font-weight: 750;
+    text-decoration: none;
+    transition: color 160ms ease;
+}
+
+.authlink:hover {
+    color: #a5f3fc;
+    text-decoration: underline;
+}
+
+@media (max-width: 520px) {
+    .chatappcontainer {
+        justify-content: flex-start;
+        gap: 24px;
+        padding: 32px 16px;
+    }
+
+    .lockcontainer {
+        padding: 22px;
+    }
+
+    .authheader h2 {
+        font-size: 1.35rem;
+    }
 }

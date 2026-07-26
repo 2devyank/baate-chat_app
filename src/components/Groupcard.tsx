@@ -7,6 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import Adduser from "./Adduser";
 import { useAuth } from "../context/AuthContext";
+import ChatAvatar from "./ChatAvatar";
 const Groupcard: React.FC<{
   open: boolean;
   onClose: () => void;
@@ -122,43 +123,58 @@ console.log("group info",groupdata[0]?.name)
     onSuccess={()=>{
       fetchGroupInformation()
     }}
+    existingParticipantIds={groupparticipants.map((participant)=>participant._id)}
     />
-    <div style={{top:"0px",right:"0px",zIndex:"1",position:"absolute",display:open?"flex":"none",flexDirection:"column",height:"100vh",width:"50%",background:"rgba(89, 90, 100, 0.458)",color:"white"}}>
-      <div style={{height:"40%",display:"flex",alignItems:"center",justifyContent:"center",borderBottom:"1px solid black"}}>
-     <span style={{fontSize:"34px",display:"flex",gap:"10px"}}>
-      
-      {openrename?(<input style={{padding:"10px 10px",fontSize:"14px",borderRadius:"8px",borderStyle:"none"}} value={groupname} onKeyDown={(e)=>{
-        if(e.key==="Enter"){
-          renamegroup();
-          setrenameall(groupname);
-          setrename_id(chatId);
-          setopenrename(false);
-
-        }
-      }}  onChange={(e)=>setgroupname(e.target.value)}/>):(groupname)}
-      </span>
-      <span>
-        <EditIcon style={{cursor:"pointer"}} onClick={()=>setopenrename(true)}/>
-        </span>
+    <aside className={`groupdrawer${open ? " groupdraweropen" : ""}`} aria-label="Group information">
+      <div className="groupdrawertopbar">
+        <span>Group Info</span>
+        <button className="groupiconbutton" onClick={handleClose} type="button" aria-label="Close group details">
+          <CloseIcon />
+        </button>
       </div>
-    <div style={{position:"absolute",top:"0px",right:"0px"}}>
-    <CloseIcon onClick={handleClose}/>
-    </div>
-      <div>
+      <div className="groupdrawerhero">
+        <ChatAvatar className="groupdraweravatar" title={groupname || "Group"} />
+        <div className="groupdraweridentity">
+          <div className="groupdrawertitlerow">
+            {openrename?(
+              <input className="grouprenameinput" value={groupname} onKeyDown={(e)=>{
+                if(e.key==="Enter"){
+                  renamegroup();
+                  setrenameall(groupname);
+                  setrename_id(chatId);
+                  setopenrename(false);
+                }
+              }}  onChange={(e)=>setgroupname(e.target.value)}/>
+            ):(<h2 className="groupdrawertitle">{groupname}</h2>)}
+            <button className="groupiconbutton" onClick={()=>setopenrename(true)} type="button" aria-label="Rename group">
+              <EditIcon />
+            </button>
+          </div>
+          <span className="groupstatusbadge">{groupparticipants?.length || 0} members</span>
+        </div>
+      </div>
+      <div className="groupsectionheader">
+        <span>Members</span>
+        <small>{groupparticipants?.length || 0} total</small>
+      </div>
+      <div className="groupparticipants">
         {groupparticipants?.map((item)=>{
           return (
-            <div style={{display:"flex",justifyContent:"space-between",padding:"20px",borderBottom:"1px solid black"}}>
-            <span>{item.username}</span>
-            <button style={{padding:"2px 2px",borderRadius:"6px",cursor:"pointer",background:"lightgrey"}} onClick={()=>removegroupparticipants(item._id)}>remove</button>
+            <div className="groupparticipant" key={item._id}>
+            <div className="groupparticipantidentity">
+              <ChatAvatar className="groupparticipantavatar" src={item.avatar?.url} title={item.username} />
+              <span>{item.username}</span>
+            </div>
+            <button className="groupremovebutton" onClick={()=>removegroupparticipants(item._id)} type="button">Remove</button>
             </div>
           )
         })}
       </div>
-      <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-        <button onClick={()=>setopenaddname(true)} style={{cursor:"pointer",padding:"10px 10px",background:"rgb(29, 169, 200)"}}>Add Participant</button>
-        <button onClick={deletegroupchat} style={{cursor:"pointer",padding:"10px 10px",background:"rgb(29, 169, 200)"}}>Delete Group</button>
+      <div className="groupactions">
+        <button onClick={()=>setopenaddname(true)} type="button">Add Participant</button>
+        <button onClick={deletegroupchat} type="button">Delete Group</button>
       </div>
-    </div>
+    </aside>
         </>
   );
 };

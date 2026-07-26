@@ -100,29 +100,36 @@ const AddChatmodal: React.FC<{
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
+      BackdropProps={{ className: "chatmodalbackdrop" }}
     >
       <div className="chatmodal">
         <div className="topmodal">
-          <p>Create chat</p>
-          <CancelIcon onClick={handleClose} />
+          <div>
+            <p id="modal-modal-title">Create chat</p>
+            <small>{isGroupChat ? "Create a group conversation" : "Start a direct conversation"}</small>
+          </div>
+          <button className="modalclosebutton" onClick={handleClose} type="button" aria-label="Close modal">
+            <CancelIcon />
+          </button>
         </div>
-        <div>
-        <Switch {...label} onChange={()=>SetisGroupChat(!isGroupChat)}/> Is it a Group chat ?
+        <div className="modalmode">
+        <Switch {...label} checked={isGroupChat} onChange={()=>SetisGroupChat(!isGroupChat)}/> Group chat
         </div>
         {isGroupChat===true &&
-          <input className="groupname" type="text" value={groupname} onChange={(e)=>setGroupname(e.target.value)} />
+          <input className="groupname" type="text" value={groupname} placeholder="Group name" onChange={(e)=>setGroupname(e.target.value)} />
         }
         <div>
         <Select 
         placeholder={isGroupChat}
         options={userdata} 
-        onChange={({_id})=>{isGroupChat?setGroupParticipants([...GroupParticipants,_id]):SetselectedUserId(_id)}}
+        onChange={({_id})=>{isGroupChat?setGroupParticipants((prev)=>prev.includes(_id)?prev:[...prev,_id]):SetselectedUserId(_id)}}
+        onRemove={(id)=>setGroupParticipants(GroupParticipants.filter((participantId)=>participantId!==id))}
         />
         </div>
         
         <div className="butgrp">
-          <button onClick={handleClose} className="modbut">Close</button>
-          <button onClick={isGroupChat?createGroupChat:createNewChat} className="modbut">Create</button>
+          <button onClick={handleClose} className="modbut modbutsecondary" type="button">Close</button>
+          <button onClick={isGroupChat?createGroupChat:createNewChat} className="modbut" type="button">Create</button>
           
         </div>
       </div>
@@ -131,5 +138,3 @@ const AddChatmodal: React.FC<{
 };
 
 export default AddChatmodal;
-
-

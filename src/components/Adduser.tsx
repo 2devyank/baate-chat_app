@@ -11,8 +11,9 @@ const Adduser: React.FC<{
     open: boolean;
     onClose: () => void;
     onSuccess: (chat: ChatListIteminterface) => void;
-    chatId:string
-  }> = ({ chatId,open, onClose, onSuccess }) => {
+    chatId:string;
+    existingParticipantIds?: string[];
+  }> = ({ chatId,open, onClose, onSuccess, existingParticipantIds = [] }) => {
     const [user,setusers]=useState<UserInterface[]>([]);
     const [participant,setparticipant]=useState<string>("");
     // @ts-ignore
@@ -26,12 +27,17 @@ const Adduser: React.FC<{
            null,
            (res) => {
              const { data } = res;
-             setusers(data || []);
+             setusers(
+              (data || []).filter(
+                (item: UserInterface) => !existingParticipantIds.includes(item._id)
+              )
+             );
            },
            alert
          );
        };
        const handleadduser=async()=>{
+        if (!participant) return alert("please select a user");
         await requestHandler(
           async()=>await addNewparticipants(chatId,participant),
           null,
@@ -46,7 +52,7 @@ const Adduser: React.FC<{
        useEffect(()=>{
         if(!open) return;
         getAllUsers();
-       },[open]);
+       },[open, existingParticipantIds]);
   return (
 
       <Modal
@@ -54,11 +60,17 @@ const Adduser: React.FC<{
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
+      BackdropProps={{ className: "chatmodalbackdrop" }}
       >
       <div className="chatmodal">
         <div className="topmodal">
-          <p>Choose User to Add</p>
-          <CancelIcon onClick={handleClose} />
+          <div>
+            <p id="modal-modal-title">Choose User to Add</p>
+            <small>Add another participant to this group</small>
+          </div>
+          <button className="modalclosebutton" onClick={handleClose} type="button" aria-label="Close modal">
+            <CancelIcon />
+          </button>
         </div>
         <div>
         <Select 
@@ -66,11 +78,14 @@ const Adduser: React.FC<{
         options={user} 
         onChange={({_id})=>{setparticipant(_id)}}
         />
+        {user.length === 0 ? (
+          <p className="modalhelpertext">All available users are already in this group.</p>
+        ) : null}
         </div>
         
         <div className="butgrp">
-          <button onClick={handleClose} className="modbut">Close</button>
-          <button onClick={handleadduser} className="modbut">Add user</button>
+          <button onClick={handleClose} className="modbut modbutsecondary" type="button">Close</button>
+          <button onClick={handleadduser} className="modbut" type="button" disabled={!participant}>Add user</button>
         </div>
       </div>
     </Modal>

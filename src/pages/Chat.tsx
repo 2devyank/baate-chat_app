@@ -13,6 +13,7 @@ import ChatItem from "../components/ChatItem";
 import { useSocket } from "../context/Socket.context";
 import { getAllchatMessages, getAllchats, sendMessage } from "../api";
 import MessageItem from "../components/MessageItem";
+import ChatAvatar from "../components/ChatAvatar";
 
 const CONNECTED_EVENT = "connected";
 const DISCONNECTED_EVENT = "disconnect";
@@ -23,6 +24,13 @@ const NEW_CHAT_EVENT = "newChat";
 const MESSAGE_RECEIVED_EVENT = "messageReceived";
 const LEAVE_CHAT_EVENT = "leaveChat";
 // const UPDATE_GROUP_NAME_EVENT = "updateGroupName";
+
+const formatFileSize = (size: number) => {
+  if (size < 1024) return `${size} B`;
+  if (size < 1024 * 1024) return `${Math.round(size / 1024)} KB`;
+  return `${(size / (1024 * 1024)).toFixed(1)} MB`;
+};
+
 const Chat = () => {
   const { user ,rename_id,renameall} = useAuth();
   const { socket } = useSocket();
@@ -38,6 +46,9 @@ const Chat = () => {
 
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const [attachedFilePreviews, setAttachedFilePreviews] = useState<
+    { file: File; url: string }[]
+  >([]);
   const [message, setmessage] = useState("");
   const [messages, setmessages] = useState<ChatMessageInterface[]>([]);
   // @ts-ignore
@@ -127,6 +138,9 @@ const Chat = () => {
       alert
     );
   };
+  const removeAttachedFile = (fileIndex: number) => {
+    setAttachedFiles((prev) => prev.filter((_, index) => index !== fileIndex));
+  };
   const onChatLeave = (chat: ChatListIteminterface) => {
     if (chat._id === currentChat.current?._id) {
       currentChat.current = null;
@@ -165,6 +179,23 @@ const Chat = () => {
   useEffect(() => {
     viewref.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages,currentChat]);
+  useEffect(() => {
+    const previews = attachedFiles.map((file) => ({
+      file,
+      url: file.type.startsWith("image/") ? URL.createObjectURL(file) : "",
+    }));
+
+    setAttachedFilePreviews(previews);
+
+    return () => {
+      previews.forEach((preview) => {
+        if (preview.url) URL.revokeObjectURL(preview.url);
+      });
+    };
+  }, [attachedFiles]);
+  const selectedChatMetadata = currentChat.current
+    ? getChatobjectMetadata(currentChat.current, user)
+    : null;
   return (
     <>
       <AddChatmodal
@@ -177,7 +208,7 @@ const Chat = () => {
         }}
       />
       <div className="overall">
-        <div className="leftsection">
+        <aside className="leftsection" aria-label="Chat sidebar">
           <div className="topleft">
             <input
               className="inputchat"
@@ -191,19 +222,19 @@ const Chat = () => {
                 setopenchatmodal(true);
               }}
             >
-              + Add chat
+              <span aria-hidden="true">+</span> Add chat
             </button>
           </div>
           <div className="downleft">
             {loadingChats ? (
-              <div>hello</div>
+              <div className="chatliststatus">Loading chats...</div>
             ) : (
               [...chats]
                 .filter((chat) =>
                   searchQuery
                     ? getChatobjectMetadata(chat, user)
                         .title?.toLocaleLowerCase()
-                        ?.includes(searchQuery)
+                        ?.includes(searchQuery.toLocaleLowerCase())
                     : true
                 )
                 .map((chat) => {
@@ -241,35 +272,33 @@ const Chat = () => {
             )}
             {/* </div> */}
           </div>
-        </div>
+        </aside>
 
         {currentChat.current && currentChat.current?._id ? (
-          <div className="rightsection">
+          <main className="rightsection">
             <div className="sticktop">
-              <img className="chatimg"
-                src={getChatobjectMetadata(currentChat.current!, user).avatar}
-                alt=""
+              <ChatAvatar
+                className="chatimg"
+                src={selectedChatMetadata?.avatar}
+                title={selectedChatMetadata?.title}
               />
               <div className="topuserinfo">
                 <span>
-                  {currentChat.current._id===rename_id?(renameall?renameall:getChatobjectMetadata(currentChat.current!, user).title):( getChatobjectMetadata(currentChat.current!, user).title)}
+                  {currentChat.current._id===rename_id?(renameall?renameall:selectedChatMetadata?.title):(selectedChatMetadata?.title)}
                 </span>
                 <small className="small">
-                  {
-                    getChatobjectMetadata(currentChat.current!, user)
-                      .description
-                  }
+                  {selectedChatMetadata?.description}
                 </small>
               </div>
             </div>
             <div  className="messagesection">
               {loadingMessages ? (
-                <span>typing...</span>
+                <span className="chatliststatus">Loading messages...</span>
               ) : (
                 <>
                   {messages?.map((msg) => {
                     return (
-                      <div ref={viewref} style={{display:"flex",flexDirection:"column"}}>
+                      <div ref={viewref} className="messagerow" key={msg._id}>
                       <MessageItem
                         key={msg._id}
                         isOwnMessage={msg.sender?._id === user?._id}
@@ -282,6 +311,33 @@ const Chat = () => {
                 </>
               )}
             </div>
+            <div className="messagecomposer">
+              {attachedFiles.length > 0 ? (
+                <div className="attachmentpreviewbar" aria-label="Selected attachments">
+                  {attachedFilePreviews.map(({ file, url }, index) => (
+                    <div className="attachmentpreview" key={`${file.name}-${index}`}>
+                      {url ? (
+                        <img src={url} alt={file.name} />
+                      ) : (
+                        <span className="filepreviewicon" aria-hidden="true">
+                          {file.name.split(".").pop()?.slice(0, 3).toUpperCase() || "FILE"}
+                        </span>
+                      )}
+                      <div className="attachmentpreviewmeta">
+                        <span>{file.name}</span>
+                        <small>{formatFileSize(file.size)}</small>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeAttachedFile(index)}
+                        aria-label={`Remove ${file.name}`}
+                      >
+                        x
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
             <div className="messageinput">
               <input
                 hidden
@@ -315,13 +371,17 @@ const Chat = () => {
                 disabled={!message && attachedFiles.length <= 0}
                 onClick={sendChatMessage}
                 className="sendmessage"
+                aria-label="Send message"
               >
                 <SendIcon />
               </button>
             </div>
-          </div>
+            </div>
+          </main>
         ) : (
-          <div>No Chat Selected</div>
+          <main className="emptychatpanel">
+            <p>No Chat Selected</p>
+          </main>
         )}
       </div>
     </>

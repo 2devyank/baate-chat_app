@@ -3,6 +3,7 @@
 import "../styles/register.css";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
 function Login() {
   const [data, setData] = useState({
@@ -21,41 +22,51 @@ function Login() {
   const loginhandle = async () => login(data);
   return (
     <div className="chatappcontainer">
-      <div className="headapp">Chai Pe Charcha App</div>
-
-      <div className="lockcontainer">
-        <div>Login</div>
-        <div className="formdetails">
-          {/* name */}
-          <input
-            className="inputfield"
-            placeholder="username..."
-            onChange={handledatachange("username")}
-          />
-
-          {/* password */}
-          <input
-            className="inputfield"
-            placeholder="password..."
-            onChange={handledatachange("password")}
-          />
-          {/* button */}
-          <button onClick={loginhandle} className="registerbutton">
-            Login
-          </button>
-          {/* <div> */}
-          {/* </div> */}
-        </div>
-        <div>
-          Don't have an account ?{" "}
-          <a
-            style={{ textDecoration: "none", color: "rgb(166, 166, 251)" }}
-            href="/register"
-          >
-            Register
-          </a>
-        </div>
+      <div className="authhero">
+        <p className="autheyebrow">Conversations brewed fresh</p>
+        <h1 className="headapp">Chai Pe Charcha</h1>
       </div>
+
+      <section className="lockcontainer" aria-labelledby="login-title">
+        <div className="authheader">
+          <h2 id="login-title">Welcome back</h2>
+          <p>Sign in to catch up with your chats and groups.</p>
+        </div>
+
+        <div className="formdetails">
+          <label className="fieldgroup" htmlFor="login-username">
+            <span>Username</span>
+            <input
+              id="login-username"
+              className="inputfield"
+              placeholder="Enter your username"
+              onChange={handledatachange("username")}
+            />
+          </label>
+
+          <label className="fieldgroup" htmlFor="login-password">
+            <span>Password</span>
+            <input
+              id="login-password"
+              className="inputfield"
+              placeholder="Enter your password"
+              type="password"
+              onChange={handledatachange("password")}
+            />
+          </label>
+
+          <button onClick={loginhandle} className="registerbutton" type="button">
+            Sign in
+          </button>
+        </div>
+
+        <p className="authswitch">
+          Don't have an account?{" "}
+          <Link className="authlink" to="/register">
+            Create one
+          </Link>
+        </p>
+      </section>
     </div>
   );
 }

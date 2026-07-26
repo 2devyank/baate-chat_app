@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import { FreeAPISuccessResponseInterface } from "../interfaces/api";
 import { ChatListIteminterface } from "../interfaces/chat";
 import { UserInterface } from "../interfaces/user";
+import { showToast } from "../components/ToastProvider";
 
 export const isBrowser = typeof window !== "undefined";
 
@@ -15,17 +16,33 @@ export const requestHandler = async (
   try {
     const response = await api();
     const { data } = response;
-    console.log("aya va data", data);
     if (data?.success) {
-      console.log("hi");
       onSuccess(data);
+    } else {
+      const message = data?.message || "Something went wrong";
+      showToast(message, "error");
+      onError && onError(message);
     }
   } catch (error: any) {
-    if ([401, 403].includes(error?.response.data?.statusCode)) {
+    const errorMessage =
+      error?.response?.data?.message ||
+      error?.response?.data?.data?.reason ||
+      error?.message ||
+      "Something went wrong";
+
+    showToast(errorMessage, "error");
+
+    const isAuthPage =
+      isBrowser && ["/login", "/register"].includes(window.location.pathname);
+
+    if (error?.response?.data?.statusCode === 401 && !isAuthPage) {
       localStorage.clear();
       if (isBrowser) window.location.href = "/login";
     }
-    onError(error?.response?.data?.message || "something went wrong");
+
+    if (onError && (!isBrowser || onError !== window.alert)) {
+      onError(errorMessage);
+    }
   } finally {
     setLoading && setLoading(false);
   }
@@ -70,7 +87,7 @@ export const getChatobjectMetadata = (
     : "No messages yet";
     if(chat.isGroupChat){
       return{
-        avatar:"https://via.placeholder.com/100x100.png",
+        avatar:"",
         title:chat.name,
         description:`${chat.participants?.length} member in the group`,
         lastMessage:chat.lastMessage?
@@ -83,7 +100,7 @@ export const getChatobjectMetadata = (
         (p) => p._id !== LoggedInUser?._id
         );
         return {
-          avatar: "https://via.placeholder.com/100x100.png",
+          avatar: participant?.avatar?.url || "",
           title: participant?.username,
           description: participant?.email,
           lastMessage,
