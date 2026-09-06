@@ -10,11 +10,14 @@ const AuthContext = createContext<{
   user: UserInterface | null;
   token: string | null;
   login: (data: { username: string; password: string }) => Promise<void>;
-  register: (data: {
-    email: string;
-    username: string;
-    password: string;
-  }) => Promise<void>;
+  register: (
+    data: {
+      email: string;
+      username: string;
+      password: string;
+    },
+    setRegisterLoading?: (loading: boolean) => void
+  ) => Promise<void>;
   logout: () => Promise<void>;
   rename_id:string|null;
   renameall:string|null;
@@ -41,15 +44,18 @@ const AuthProvider :React.FC<{children:React.ReactNode}>= ({ children }) => {
   
   const [rename_id,setrename_id]=useState("");
   const [renameall,setrenameall]=useState("");
-  const register = async (data: {
-    username: string;
-    email: string;
-    password: string;
-  }) => {
+  const register = async (
+    data: {
+      username: string;
+      email: string;
+      password: string;
+    },
+    setRegisterLoading?: (loading: boolean) => void
+  ) => {
     console.log("async")
     await requestHandler(
       async () => await registerUser(data),
-      null,
+      setRegisterLoading || null,
       (res) => {
         const { data } = res;
         setUser(data.user);
@@ -59,14 +65,8 @@ const AuthProvider :React.FC<{children:React.ReactNode}>= ({ children }) => {
         showToast("Account created! Welcome aboard.", "success");
         navigate("/chat");
       },
-      
       alert
-      // api,
-      //loading,
-      //onSuccess,
-      //onError
     );
-    // navigate("/login")
   };
 
   const login = async (data: { username: string; password: string }) => {

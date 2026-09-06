@@ -18,8 +18,17 @@ function Login() {
         [name]: e.target.value,
       });
     };
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
-  const loginhandle = async () => login(data);
+  const loginhandle = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      await login(data);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <div className="chatappcontainer">
       <div className="authhero">
@@ -55,8 +64,34 @@ function Login() {
             />
           </label>
 
-          <button onClick={loginhandle} className="registerbutton" type="button">
-            Sign in
+          <button
+            onClick={loginhandle}
+            className="registerbutton"
+            type="button"
+            disabled={isSubmitting || !data.username || !data.password}
+          >
+            {isSubmitting ? (
+              <span className="buttonloader">
+                <svg
+                  className="spinnersvg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    strokeDasharray="30 60"
+                  />
+                </svg>
+                Signing in...
+              </span>
+            ) : (
+              "Sign in"
+            )}
           </button>
         </div>
 

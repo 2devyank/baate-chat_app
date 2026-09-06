@@ -28,3 +28,11 @@ createdAt:string;
 updatedAt:string;
 
 }
+
+/** Payload shape for pre-uploaded attachments sent to the backend */
+export interface AttachmentPayload {
+  url: string;
+  publicId: string;
+  resourceType: string;
+  originalName: string;
+}

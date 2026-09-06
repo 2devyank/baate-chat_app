@@ -20,76 +20,86 @@ const AddChatmodal: React.FC<{
   
 
 
-  const [userdata,setuserdata]=useState<UserInterface[]>([]);
-  const [selectedUserId,SetselectedUserId]=useState<null|string>(null);
-  const [isGroupChat,SetisGroupChat]=useState(false);
-  const [GroupParticipants,setGroupParticipants]=useState<string[]>([]);
+  const [userdata, setuserdata] = useState<UserInterface[]>([]);
+  const [selectedUserId, SetselectedUserId] = useState<null | string>(null);
+  const [isGroupChat, SetisGroupChat] = useState(false);
+  const [GroupParticipants, setGroupParticipants] = useState<string[]>([]);
   // @ts-ignore
-  const [creatingchat,setcreatingchat]=useState(false);
-  const [groupname,setGroupname]=useState<string>(" ");
+  const [creatingchat, setcreatingchat] = useState(false);
+  const [groupname, setGroupname] = useState<string>(" ");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchLoading, setSearchLoading] = useState<boolean>(false);
+
   const handleClose = () => {
-    setuserdata([])
-    SetselectedUserId("")
-    setGroupParticipants([])
+    setuserdata([]);
+    SetselectedUserId("");
+    setGroupParticipants([]);
     setGroupname("");
+    setSearchTerm("");
     onClose();
   };
 
-
-  
-  
-  const createNewChat=async()=>{
-
-    if(!selectedUserId) return alert('please select a user');
+  const createNewChat = async () => {
+    if (!selectedUserId) return alert("please select a user");
     await requestHandler(
-    async()=>await createOneOnOnecount(selectedUserId),
-    setcreatingchat,
-    (res)=>{
-      const {data}=res;
-      if(res.statusCode===200){
-        alert("chat already exist")
-        return;
-      }
-      onSuccess(data);
-      handleClose();
-    },
-    alert
-    )
-  }
-  const createGroupChat=async()=>{
-    if(!GroupParticipants) return alert('please add user');
-    await requestHandler(
-      async()=>await createChatGroup({
-        name:groupname,
-        participants:GroupParticipants
-      }),
+      async () => await createOneOnOnecount(selectedUserId),
       setcreatingchat,
-      (res)=>{
-        const {data}=res;
-        console.log("hello moto");
+      (res) => {
+        const { data } = res;
+        if (res.statusCode === 200) {
+          alert("chat already exist");
+          return;
+        }
         onSuccess(data);
         handleClose();
-        },
+      },
       alert
     );
   };
-  const getAllUsers = async () => {
-   await requestHandler(
-      async () => await searchAllUsers(),
-      null,
+
+  const createGroupChat = async () => {
+    if (!GroupParticipants || GroupParticipants.length === 0)
+      return alert("please add user");
+    await requestHandler(
+      async () =>
+        await createChatGroup({
+          name: groupname,
+          participants: GroupParticipants,
+        }),
+      setcreatingchat,
       (res) => {
         const { data } = res;
-        setuserdata(data||[]);
+        console.log("hello moto");
+        onSuccess(data);
+        handleClose();
       },
       alert
-      );
-    };
-    
+    );
+  };
 
-    useEffect(() => {
-      if (!open) return;
-      getAllUsers();
-    }, [open]);
+  const getAllUsers = async (searchQuery: string = "") => {
+    await requestHandler(
+      async () => await searchAllUsers({ search: searchQuery, page: 1, limit: 10 }),
+      setSearchLoading,
+      (res) => {
+        const { data } = res;
+        // Data contains { users, page, limit, totalPages, totalUsers }
+        const userList = Array.isArray(data) ? data : data?.users || [];
+        setuserdata(userList);
+      },
+      alert
+    );
+  };
+
+  // Debounced search when user types
+  useEffect(() => {
+    if (!open) return;
+    const timer = setTimeout(() => {
+      getAllUsers(searchTerm);
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [open, searchTerm]);
    
     // Example options array
     
@@ -124,6 +134,9 @@ const AddChatmodal: React.FC<{
         options={userdata} 
         onChange={({_id})=>{isGroupChat?setGroupParticipants((prev)=>prev.includes(_id)?prev:[...prev,_id]):SetselectedUserId(_id)}}
         onRemove={(id)=>setGroupParticipants(GroupParticipants.filter((participantId)=>participantId!==id))}
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        isLoading={searchLoading}
         />
         </div>
         

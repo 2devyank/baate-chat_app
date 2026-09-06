@@ -11,6 +11,7 @@ function Register() {
     email: "",
     password: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { register } = useAuth();
   const handledatachange =
     (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,8 +21,8 @@ function Register() {
       });
     };
   const handleRegister = async () => {
-    console.log("data");
-    await register(data);
+    if (isSubmitting) return;
+    await register(data, setIsSubmitting);
   };
   console.log(data);
   return (
@@ -69,8 +70,34 @@ function Register() {
             />
           </label>
 
-          <button onClick={handleRegister} className="registerbutton" type="button">
-            Create account
+          <button
+            onClick={handleRegister}
+            className="registerbutton"
+            type="button"
+            disabled={isSubmitting || !data.username || !data.email || !data.password}
+          >
+            {isSubmitting ? (
+              <span className="buttonloader">
+                <svg
+                  className="spinnersvg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    strokeDasharray="30 60"
+                  />
+                </svg>
+                Creating account...
+              </span>
+            ) : (
+              "Create account"
+            )}
           </button>
         </div>
 

@@ -14,45 +14,58 @@ const Adduser: React.FC<{
     chatId:string;
     existingParticipantIds?: string[];
   }> = ({ chatId,open, onClose, onSuccess, existingParticipantIds = [] }) => {
-    const [user,setusers]=useState<UserInterface[]>([]);
-    const [participant,setparticipant]=useState<string>("");
+    const [user, setusers] = useState<UserInterface[]>([]);
+    const [participant, setparticipant] = useState<string>("");
     // @ts-ignore
-    const [fake,setfake]=useState(false);
-    const handleClose=()=>{
+    const [fake, setfake] = useState(false);
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [searchLoading, setSearchLoading] = useState<boolean>(false);
+
+    const handleClose = () => {
+        setSearchTerm("");
+        setparticipant("");
         onClose();
-    }
-    const getAllUsers = async () => {
+    };
+
+    const getAllUsers = async (query: string = "") => {
         await requestHandler(
-           async () => await searchAllUsers(),
-           null,
-           (res) => {
-             const { data } = res;
-             setusers(
-              (data || []).filter(
-                (item: UserInterface) => !existingParticipantIds.includes(item._id)
-              )
-             );
-           },
-           alert
-         );
-       };
-       const handleadduser=async()=>{
+            async () => await searchAllUsers({ search: query, page: 1, limit: 10 }),
+            setSearchLoading,
+            (res) => {
+                const { data } = res;
+                const userList = Array.isArray(data) ? data : data?.users || [];
+                setusers(
+                    userList.filter(
+                        (item: UserInterface) => !existingParticipantIds.includes(item._id)
+                    )
+                );
+            },
+            alert
+        );
+    };
+
+    const handleadduser = async () => {
         if (!participant) return alert("please select a user");
         await requestHandler(
-          async()=>await addNewparticipants(chatId,participant),
-          null,
-          (res)=>{
-            const {data}=res;
-            onSuccess(data);
-            handleClose();
-          },
-          alert
-        )
-       }
-       useEffect(()=>{
-        if(!open) return;
-        getAllUsers();
-       },[open, existingParticipantIds]);
+            async () => await addNewparticipants(chatId, participant),
+            null,
+            (res) => {
+                const { data } = res;
+                onSuccess(data);
+                handleClose();
+            },
+            alert
+        );
+    };
+
+    useEffect(() => {
+        if (!open) return;
+        const timer = setTimeout(() => {
+            getAllUsers(searchTerm);
+        }, 400);
+
+        return () => clearTimeout(timer);
+    }, [open, searchTerm, existingParticipantIds]);
   return (
 
       <Modal
@@ -77,9 +90,12 @@ const Adduser: React.FC<{
         placeholder={fake}
         options={user} 
         onChange={({_id})=>{setparticipant(_id)}}
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        isLoading={searchLoading}
         />
-        {user.length === 0 ? (
-          <p className="modalhelpertext">All available users are already in this group.</p>
+        {user.length === 0 && !searchLoading ? (
+          <p className="modalhelpertext">All available users are already in this group or none matched your search.</p>
         ) : null}
         </div>
         

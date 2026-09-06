@@ -1,5 +1,6 @@
 import axios from "axios";
 import { LocalStorage } from "../utils";
+import { AttachmentPayload } from "../interfaces/chat";
 
 
 const apiClient = axios.create({
@@ -32,24 +33,24 @@ const registerUser = (data: {
 const logoutUser = () => {
   return apiClient.post("/logout");
 };
-const searchAllUsers = () => {
-  return apiClient.get("/allusers");
+const searchAllUsers = (params?: { search?: string; page?: number; limit?: number }) => {
+  return apiClient.get("/allusers", {
+    params: {
+      search: params?.search || "",
+      page: params?.page || 1,
+      limit: params?.limit || 10,
+    },
+  });
 };
 
 const getAllchatMessages = (chatId: string) => {
   return apiClient.get(`messages/${chatId}`);
 };
-const sendMessage = (chatId: string, content: string, attachments: File[]) => {
-  const formData=new FormData();
-  if(content){
-    console.log("content ayta vha",content)
-    formData.append("content",content);
-  }
-  attachments?.map((file)=>{
-formData.append("attachments",file);
-  })
-  console.log("formdata",formData);
-    return apiClient.post(`/messages/${chatId}`,formData);
+const sendMessage = (chatId: string, content: string, attachments: AttachmentPayload[]) => {
+    return apiClient.post(`/messages/${chatId}`, {
+      content: content || "",
+      attachments: attachments || [],
+    });
 };
 
 const getAllchats=()=>{
