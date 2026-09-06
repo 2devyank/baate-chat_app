@@ -214,7 +214,7 @@ const Chat = () => {
       socket.off(NEW_CHAT_EVENT, onNewChats);
       socket.off(LEAVE_CHAT_EVENT, onChatLeave);
     };
-  }, [socket, chats]);
+  }, [socket, selectedChat?._id, chats]);
   useEffect(() => {
     viewref.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, selectedChat]);

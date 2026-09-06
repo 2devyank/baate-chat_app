@@ -39,8 +39,8 @@ const useAuth = () => useContext(AuthContext);
 const AuthProvider :React.FC<{children:React.ReactNode}>= ({ children }) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState<UserInterface | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<UserInterface | null>(() => LocalStorage.get("user") || null);
+  const [token, setToken] = useState<string | null>(() => LocalStorage.get("token") || null);
   
   const [rename_id,setrename_id]=useState("");
   const [renameall,setrenameall]=useState("");
