@@ -23,11 +23,14 @@ const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
       return;
     }
 
-    const socketUri = import.meta.env.VITE_SOCKET_URI;
-    if (!socketUri) {
+    const rawSocketUri = import.meta.env.VITE_SOCKET_URI || import.meta.env.VITE_SERVER_URI;
+    if (!rawSocketUri) {
       console.warn("VITE_SOCKET_URI is not defined");
       return;
     }
+
+    // Strip trailing /chatapp or /chatapp/ or trailing slashes to prevent Socket.io treating /chatapp as an invalid namespace
+    const socketUri = rawSocketUri.replace(/\/chatapp\/?$/i, "").replace(/\/+$/, "");
 
     const newSocket = socketio(socketUri, {
       withCredentials: true,
@@ -35,6 +38,14 @@ const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
       transports: ["websocket", "polling"],
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
+    });
+
+    newSocket.on("connect", () => {
+      console.log("Socket connected successfully with ID:", newSocket.id);
+    });
+
+    newSocket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error.message);
     });
 
     setSocket(newSocket);

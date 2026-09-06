@@ -115,7 +115,10 @@ const Chat = () => {
     if (message.chat !== currentChat.current?._id) {
       setUnreadMessages((prev) => [...prev, message]);
     } else {
-      setmessages((msg) => [...msg, message]);
+      setmessages((prev) => {
+        if (prev.some((m) => m._id === message._id)) return prev;
+        return [...prev, message];
+      });
     }
     updateLastChatMessage(message.chat, message);
   };
