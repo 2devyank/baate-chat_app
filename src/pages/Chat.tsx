@@ -36,7 +36,16 @@ const Chat = () => {
   const { user ,rename_id,renameall} = useAuth();
   const { socket } = useSocket();
   const viewref = useRef<HTMLDivElement>(null);
-  const currentChat = useRef<ChatListIteminterface | null>(null);
+  const [selectedChat, setSelectedChat] = useState<ChatListIteminterface | null>(() => {
+    return LocalStorage.get("currentChat") || null;
+  });
+  const currentChat = useRef<ChatListIteminterface | null>(selectedChat);
+
+  // Keep currentChat ref in sync with state for any callbacks
+  useEffect(() => {
+    currentChat.current = selectedChat;
+  }, [selectedChat]);
+
   const [openchatmodal, setopenchatmodal] = useState<boolean>(false);
   const [loadingChats, setLoadingChats] = useState<boolean>(false);
   const [chats, setChat] = useState<ChatListIteminterface[]>([]);
@@ -55,18 +64,20 @@ const Chat = () => {
   // @ts-ignore
   const [Isconnected, setIsConnected] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const getMessages = async () => {
-    if (!currentChat.current?._id) return alert("no chat selected");
 
-    if (!socket) return alert("Socket not available");
+  const getMessages = async (chatIdToFetch?: string) => {
+    const targetChatId = chatIdToFetch || selectedChat?._id || currentChat.current?._id;
+    if (!targetChatId) return;
 
-    socket.emit(JOIN_CHAT_EVENT, currentChat.current?._id);
+    if (socket) {
+      socket.emit(JOIN_CHAT_EVENT, targetChatId);
+    }
 
-    setUnreadMessages(
-      unreadMessages.filter((msg) => msg.chat !== currentChat.current?._id)
+    setUnreadMessages((prev) =>
+      prev.filter((msg) => msg.chat !== targetChatId)
     );
     requestHandler(
-      async () => await getAllchatMessages(currentChat.current?._id || ""),
+      async () => await getAllchatMessages(targetChatId),
       setLoadingMessages,
       (res) => {
         const { data } = res;
@@ -164,9 +175,9 @@ const Chat = () => {
     setAttachedFiles((prev) => prev.filter((_, index) => index !== fileIndex));
   };
   const onChatLeave = (chat: ChatListIteminterface) => {
-    if (chat._id === currentChat.current?._id) {
-      currentChat.current = null;
-      LocalStorage.remove("currentchat");
+    if (chat._id === selectedChat?._id) {
+      setSelectedChat(null);
+      LocalStorage.remove("currentChat");
     }
     setChat((prev) => prev.filter((c) => c._id !== chat._id));
   };
@@ -174,13 +185,19 @@ const Chat = () => {
     getChats();
 
     const _currentChat = LocalStorage.get("currentChat");
-
-    if (_currentChat) {
-      currentChat.current = _currentChat;
-      socket?.emit(JOIN_CHAT_EVENT, _currentChat.current?._id);
-      getMessages();
+    if (_currentChat?._id) {
+      setSelectedChat(_currentChat);
+      getMessages(_currentChat._id);
     }
   }, []);
+
+  // When socket connects or changes, ensure we join the current active chat room
+  useEffect(() => {
+    if (socket && selectedChat?._id) {
+      socket.emit(JOIN_CHAT_EVENT, selectedChat._id);
+    }
+  }, [socket, selectedChat?._id]);
+
   useEffect(() => {
     if (!socket) return;
 
@@ -200,7 +217,7 @@ const Chat = () => {
   }, [socket, chats]);
   useEffect(() => {
     viewref.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages,currentChat]);
+  }, [messages, selectedChat]);
   useEffect(() => {
     const previews = attachedFiles.map((file) => ({
       file,
@@ -215,8 +232,8 @@ const Chat = () => {
       });
     };
   }, [attachedFiles]);
-  const selectedChatMetadata = currentChat.current
-    ? getChatobjectMetadata(currentChat.current, user)
+  const selectedChatMetadata = selectedChat
+    ? getChatobjectMetadata(selectedChat, user)
     : null;
   return (
     <>
@@ -263,28 +280,24 @@ const Chat = () => {
                   return (
                     <ChatItem
                       chat={chat} 
-                      isActive={chat._id === currentChat.current?._id}
+                      isActive={chat._id === selectedChat?._id}
                       unreadCount={
                         unreadMessages.filter((n) => n.chat === chat._id).length
                       }
                       onCLick={(chat) => {
-                        if (
-                          currentChat.current?._id &&
-                          currentChat.current._id === chat._id
-                        )
-                          return;
+                        if (selectedChat?._id === chat._id) return;
                         LocalStorage.set("currentChat", chat);
-                        currentChat.current = chat;
+                        setSelectedChat(chat);
                         setmessage("");
-                        getMessages();
+                        getMessages(chat._id);
                       }}
                       key={chat._id}
                       onChatDelete={(chatId) => {
                         setChat((prev) =>
                           prev.filter((chat) => chat._id !== chatId)
                         );
-                        if (currentChat.current?._id === chatId) {
-                          currentChat.current = null;
+                        if (selectedChat?._id === chatId) {
+                          setSelectedChat(null);
                           LocalStorage.remove("currentChat");
                         }
                       }}
@@ -296,7 +309,7 @@ const Chat = () => {
           </div>
         </aside>
 
-        {currentChat.current && currentChat.current?._id ? (
+        {selectedChat && selectedChat?._id ? (
           <main className="rightsection">
             <div className="sticktop">
               <ChatAvatar
@@ -306,7 +319,7 @@ const Chat = () => {
               />
               <div className="topuserinfo">
                 <span>
-                  {currentChat.current._id===rename_id?(renameall?renameall:selectedChatMetadata?.title):(selectedChatMetadata?.title)}
+                  {selectedChat._id===rename_id?(renameall?renameall:selectedChatMetadata?.title):(selectedChatMetadata?.title)}
                 </span>
                 <small className="small">
                   {selectedChatMetadata?.description}
@@ -324,7 +337,7 @@ const Chat = () => {
                       <MessageItem
                         key={msg._id}
                         isOwnMessage={msg.sender?._id === user?._id}
-                        isGroupChatMessage={currentChat.current?.isGroupChat}
+                        isGroupChatMessage={selectedChat?.isGroupChat}
                         message={msg}
                         />
                         </div>
